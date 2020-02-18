@@ -1,0 +1,22 @@
+.task-form{
+    background-color: #32343c;
+    
+    padding: 10px;
+    border: 1px solid white;
+}
+.task-form h5{
+    color: white;
+}
+.task-form .card-footer{
+    display: flex;
+}
+.task-form input{
+    /*color: black;*/
+}
+.task-form textarea{
+    min-height: 7em;
+    color: white;
+}
+.m-r-20{
+    margin-right:20px;
+}

@@ -1,0 +1,27 @@
+.bar-chart{
+    display: flex;
+    margin-top: 10px
+}
+.new-users{
+    height: 30px;
+    border: 1px solid white;
+    text-align: center;
+    line-height: 30px;
+    background-color:rgb(219, 68, 55);
+    ;
+}
+.returning-users{
+    border: 1px solid white;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: rgb(66, 133, 244);
+
+}
+label{
+    display: inline;
+    font-size: 15px;
+}
+.chart{
+    margin-top:20px;
+}

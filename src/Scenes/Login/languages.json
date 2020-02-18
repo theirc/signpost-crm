@@ -1,0 +1,20 @@
+{
+	"en": {
+		"Login": {
+			"title": "Login",
+			"username": "User Name",
+			"password": "Password",
+			"submit": "Log In",
+			"privacyInfo": "We'll never share your email with anyone else"
+		}
+	},
+	"fr": {
+		"Login": {
+			"title": "Login fr",
+			"username": "User Name fr",
+			"password": "Password fr",
+			"submit": "Log In fr",
+			"privacyInfo": "We'll never share your email with anyone else fr"
+		}
+	}
+}

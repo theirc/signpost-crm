@@ -1,0 +1,81 @@
+body{
+    background-color: black;
+}
+
+h5{
+    color: rgb(146, 139, 139);
+}
+.container-flex{
+    width:95%;
+}
+.chat-form{
+    background-color: rgb(32, 33, 37);
+    color: white;
+    padding: 20px;
+    border-radius: 6px;
+}
+.chat-form textarea{
+    color: rgb(146, 139, 139);
+    min-height: 7em;
+}
+.chat-form input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+}
+.m-b-40{
+    margin-bottom: 40px;
+}
+
+.select{
+    background-color: rgb(32, 33, 37);
+    color: white;
+}
+.m-b-20{
+    margin-bottom: 20px;
+}
+.m-t-20{
+    margin-top:20px;
+    display: block;
+}
+.m-t-50{
+    margin-top:50px;
+}
+.m-l-20{
+    margin-left:20px;
+}
+.createSession{
+    background-color: black;;
+}
+.pull-right{
+    float:right;
+}
+.pull-left{
+    float:left;
+}
+.sessionElement{
+    background-color: rgb(32, 33, 37);
+    padding: 20px;
+    border-radius: 6px;
+    color: rgb(146, 139, 139);
+    margin:5px;
+}
+.sessionElement .date{
+    font-style: italic;
+    font-size: 13px;
+}
+.followup{
+    background-color: rgb(187, 159, 36);
+    color: black;
+    height: 20px;
+    font-size: 10px;
+    width: -moz-fit-content;
+    width: fit-content;
+    padding: 2px;
+    right: 83px;
+    /* position: absolute; */
+    margin-top: 10px;
+    border-radius: 6px;
+}
+.phoneNumber{
+    color: white;
+}

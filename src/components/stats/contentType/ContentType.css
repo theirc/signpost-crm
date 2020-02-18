@@ -1,0 +1,31 @@
+.bar-chart{
+    display: block;
+    margin-top: 10px
+}
+.informativos{
+    height: 40px;
+    border: 1px solid white;
+    text-align: center;
+    line-height: 40px;
+    background-color:rgb(219, 68, 55);
+    ;
+}
+.services{
+    border: 1px solid white;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: rgb(66, 133, 244);
+
+}
+.moderator{
+    border: 1px solid white;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: rgb(244, 180, 0);
+}
+label{
+    display: inline;
+    font-size: 15px;
+}

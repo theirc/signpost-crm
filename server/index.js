@@ -7,6 +7,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const twilio = require('twilio');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const request = require('request');
 const routes = require('./routes');
@@ -132,28 +133,4 @@ function verifyToken(req, res, next){
   }else{
       res.sendStatus(403);
   }
-}
-
-function getChatNumbers(req, res){
-  console.log("GET Numbers");
-  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-  res.header('Cache-Control', 'no-cache');
-  const sid = 'AC56ec5750accda2f3abe42a2b90a865ab';
-  const token = '79de8d2ebdb61e6f3fe3c74b1d355c17';
-
-  const client = require('twilio')(sid, token);
-  let numbers = [];
-  client.messages.list({
-      dateSentAfter: new Date(Date.UTC(2020, 1, 1, 0, 0, 0)),
-      from:'whatsapp:+15184130994',
-  }).then(list => {
-      console.log(list.length);
-      //list.forEach(m => console.log(m.body.replace("\n", "").substr(0,30)))
-      
-      let chats = list.filter(m => m.body.toLowerCase().indexOf("pronto un asistente") > -1);
-      //console.log(chats.length);
-      chats.forEach(m => numbers.push(m.to));;
-      let phoneNumbers = [...new Set(numbers)];
-      res.json(phoneNumbers);
-  })
 }

@@ -39,7 +39,6 @@ app.get('/api/ping', function (req, res) {
  return res.send('pong'); 
 });
 
-app.use("/chatnumbers", getChatNumbers);
 
 app.get('/', function (req, res) {
   console.log("*** / ***");

@@ -28,7 +28,7 @@ app.use(function(req, res, next) {
   //res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-  res.header("Access-Control-Allow-Origin", process.env.ORIGIN); 
+  res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER); 
   next();
 });
 
@@ -42,13 +42,13 @@ app.get('/api/ping', function (req, res) {
 
 app.get('/', function (req, res) {
   console.log("*** / ***");
-  res.header("Access-Control-Allow-Origin", process.env.ORIGIN); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER); // update to match the domain you will make the request from
   res.header('Cache-Control', 'no-cache');
   res.sendFile(path.join(path.dirname(__dirname), 'build', 'index.html'));
 });
 app.get('*', function (req, res) {
   console.log("*** / ***");
-  res.header("Access-Control-Allow-Origin", process.env.ORIGIN); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER); // update to match the domain you will make the request from
   res.header('Cache-Control', 'no-cache');
   res.sendFile(path.join(path.dirname(__dirname), 'build', 'index.html'));
 });

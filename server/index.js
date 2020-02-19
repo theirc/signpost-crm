@@ -12,7 +12,7 @@ require('dotenv').config();
 const request = require('request');
 const routes = require('./routes');
 
-app.use(cors({"origin": "*"}));
+app.use(cors({"origin": process.env.FLEX_ORIGIN_HEADER}));
 app.use(compress());
 app.disable('x-powered-by');
 app.use(bodyParser.json());

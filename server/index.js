@@ -39,26 +39,6 @@ app.get('/api/ping', function (req, res) {
  return res.send('pong'); 
 });
 
-// app.post('/api/login', function (req, res) {
-//   //console.log(req);
-//   //TO DO: validate user and password
-//   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-//   res.header('Cache-Control', 'no-cache');
-  
-//   console.log(req.body.username, req.body.password);
-//   if (validateUserAndPassword(req.body)){
-//     var formData = { username: req.body.username, password: req.body.password};
-//     request.post({url: 'https://auth.rescue.org/SimpleAuthenticationRESTService.aspx', formData: formData},
-//       function(error, response, body){
-//           if (!error && response.statusCode == 200){
-//               res.send(true);
-//           }
-//       })
-//   }else{
-//     res.send({})
-//   }
-// })
-
 app.use("/chatnumbers", getChatNumbers);
 
 app.get('/', function (req, res) {
@@ -76,50 +56,47 @@ app.get('*', function (req, res) {
 
 app.use("/", express.static("build"));
 
-
-
-
 app.listen(process.env.PORT || 8080, () => { console.log("server ready listening on port 8080")});
 
-const validateUserAndPassword= (body) => {
-  if(body.username && body.password){
-    mysql_pool.getConnection(function(err, connection) {
-      if (err) {
-        connection.release();
-          console.log(' Error getting mysql_pool connection: ' + err);
-          throw err;
-        }
-        connection.query('Select username, name, lastname, initials, country, role from users;', function(err2, rows, fields) {	
-          if (err2) {
-            var data = { "Time":"", "DatabaseStatus":"" };
-            data["Time"] = (new Date()).getTime();
-            data["DatabaseStatus"] = "Down";
-            return data; 
-          } else {
-            var dbretval = rows[0].SettingValue;
-            if (dbretval == 1 ) {
-              var data = { "Time":"", "DatabaseStatus":"" };
-              data["Time"] = (new Date()).getTime();
-              data["DatabaseStatus"] = "Up";
-              return data;
-              res.json(data); 
-            } else {
-              var data = { "Time":"", "DatabaseStatus":"" };
-              data["Time"] = (new Date()).getTime();
-              data["DatabaseStatus"] = "Down";
-              return data;
-              res.json(data); 
-            }
-          }
-        console.log(' mysql_pool.release()');
-        connection.release();
-        });
-    });
-  }else{
-     return false;
-  }
+// const validateUserAndPassword= (body) => {
+//   if(body.username && body.password){
+//     mysql_pool.getConnection(function(err, connection) {
+//       if (err) {
+//         connection.release();
+//           console.log(' Error getting mysql_pool connection: ' + err);
+//           throw err;
+//         }
+//         connection.query('Select username, name, lastname, initials, country, role from users;', function(err2, rows, fields) {	
+//           if (err2) {
+//             var data = { "Time":"", "DatabaseStatus":"" };
+//             data["Time"] = (new Date()).getTime();
+//             data["DatabaseStatus"] = "Down";
+//             return data; 
+//           } else {
+//             var dbretval = rows[0].SettingValue;
+//             if (dbretval == 1 ) {
+//               var data = { "Time":"", "DatabaseStatus":"" };
+//               data["Time"] = (new Date()).getTime();
+//               data["DatabaseStatus"] = "Up";
+//               return data;
+//               res.json(data); 
+//             } else {
+//               var data = { "Time":"", "DatabaseStatus":"" };
+//               data["Time"] = (new Date()).getTime();
+//               data["DatabaseStatus"] = "Down";
+//               return data;
+//               res.json(data); 
+//             }
+//           }
+//         console.log(' mysql_pool.release()');
+//         connection.release();
+//         });
+//     });
+//   }else{
+//      return false;
+//   }
 
-}
+// }
 
 
 function verifyToken(req, res, next){

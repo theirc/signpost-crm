@@ -29,7 +29,7 @@ export const Login = props => {
 
 		setMessage('');
 		setLoading(true);
-		return fetch(process.env.API_URL+'/api/auth/login', { headers: composeHeader(), body, method: 'POST' })
+		return fetch('/api/auth/login', { headers: composeHeader(), body, method: 'POST' })
 			.then(res => {
 				if (res.status === 200) return res.json();
 				setMessage(res.statusText);

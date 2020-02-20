@@ -36,7 +36,7 @@ app.use('/api', routes);
 
 app.get('/api/ping', function (req, res) {
   console.log("pong");
-  return res.send('pong'+process.env.API_URL); 
+  return res.send('pong'+process.env.API_URL+" "+process.env.JWT_SECRET); 
 });
 
 

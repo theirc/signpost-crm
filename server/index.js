@@ -36,7 +36,8 @@ app.use('/api', routes);
 
 app.get('/api/ping', function (req, res) {
   console.log("pong");
- return res.send('pong'); 
+  let env = JSON.stringify(process.env);
+ return res.send('pong'+env); 
 });
 
 

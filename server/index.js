@@ -34,6 +34,8 @@ app.use(function(req, res, next) {
 
 app.use('/api', routes);
 
+app.use("/chatnumbers", getChatNumbers);
+
 app.get('/api/ping', function (req, res) {
   console.log("pong");
   return res.send('pong'+process.env.API_URL+" "+process.env.JWT_SECRET); 
@@ -109,4 +111,29 @@ function verifyToken(req, res, next){
   }else{
       res.sendStatus(403);
   }
+}
+
+
+function getChatNumbers(req, res){
+  console.log("GET Numbers");
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.header('Cache-Control', 'no-cache');
+  const sid = process.env.TWILIO_SID;
+  const token = process.env.TWILIO_TOKEN;
+
+  const client = require('twilio')(sid, token);
+  let numbers = [];
+  client.messages.list({
+      dateSentAfter: new Date(Date.UTC(2020, 1, 1, 0, 0, 0)),
+      from:'whatsapp:+15184130994',
+  }).then(list => {
+      console.log(list.length);
+      //list.forEach(m => console.log(m.body.replace("\n", "").substr(0,30)))
+      
+      let chats = list.filter(m => m.body.toLowerCase().indexOf("pronto un asistente") > -1);
+      //console.log(chats.length);
+      chats.forEach(m => numbers.push(m.to));;
+      let phoneNumbers = [...new Set(numbers)];
+      res.json(phoneNumbers);
+  })
 }

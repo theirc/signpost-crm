@@ -50,10 +50,18 @@ class CreateSession extends Component {
             [e.target.id]: e.target.value
         })
     }
-    handleChangeCategory = (e) => 
+    handleChangeCategory = (e) => {
         this.setState({
             category: e.value
         })
+    }
+
+    handleChangeFollowUp = (e) => {
+        console.log(e.target.checked);
+        this.setState({
+            followup: e.target.checked
+        })
+    }
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -65,38 +73,11 @@ class CreateSession extends Component {
     updateTaskCount = (count) => {
         this.setState({taskCount : count});
     }
-    // handleSearch = (e) =>{
-    //     ///To do: move this action to API
-    //     e.preventDefault();
-    //     this.setState({loadingHistory : true});
-    //     let phone = this.props.match && this.props.match.phone ? this.props.match.phone : this.state.phone;
-    //     let headers = [
-    //         ['Content-Type', 'application/x-www-form-urlencoded'],
-    //         ['Content-Type', 'multipart/form-data'],
-    //         ['Content-Type', 'text/plain'],
-    //       ];
-    //     if (phone){
-    //         fetch(`https://mustard-himalayan-7945.twil.io/get_logs?phone=${phone}`)
-    //         .then((response) => {
-    //             return response.json()
-    //         })
-    //         .then((history) => {
-    //             this.setState({history: history.result, loadingHistory: false});
-                
-    //         })
-    //     }
-    //     console.log("ges sessions");
-    //     api.getSessions(this.state.phone).then(list => {
-    //         console.log(list);
-    //         this.setState({userSessions: list.rows})
-    //     });
-    // }
 
     render() {
         
         const { user, flex } = this.props;
         const { phone, loadingHistory, history, category, userSessions, tasks, taskCount } = this.state;
-        const showTaskCount = taskCount && taskCount > 0 ? `(${taskCount})` : '';
         const categories = [{Category:"Health", value: 1}, {Category: "Women", value: 3}, {Category:"Violence", value: 2 }];
         const saveDisabled = phone && category ? "": "disabled";
         const catOptions = categories && categories.map(c => {return {value: c.value, label: c.Category}});
@@ -126,7 +107,7 @@ class CreateSession extends Component {
                                 <Select id="category" styles={customStyles} options={catOptions} onChange={this.handleChangeCategory}/>
                             </div>
                             <label className="m-t-20">
-                                <input type="checkbox" id="followup" onChange={this.handleChange} />
+                                <input type="checkbox" id="followup" onClick={this.handleChangeFollowUp} />
                                 <span>Needs Follow Up</span>
                             </label>
                             <div className="row m-t-20">

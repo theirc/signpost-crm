@@ -19,7 +19,6 @@ class Sessions extends Component{
     }
     render(){
         const { sessions } = this.state;
-        console.log(sessions);
         return (
             <div>
             <h3>Chat Sessions</h3>

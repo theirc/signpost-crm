@@ -6,7 +6,6 @@ const Message = ({message, phone}) => {
     const classname = message.from.indexOf(phone) > -1 ? "left light-3" : "right message-green light-3";
     const date = new Date(message.date);
     const text = message.body.replace(/(?:\r\n|\r|\n)/g, '<br>');
-    console.log(message);
     return (
         <div className={"card rounded z-depth-1 message-detail "+classname}>
             <div className="card-content grey-text text-darken-3">

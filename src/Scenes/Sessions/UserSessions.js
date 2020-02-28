@@ -13,17 +13,14 @@ class UserSessions extends Component{
     }
 
     componentDidMount(){
-        //Check new status
-        
-        let messageSid = this.props.s.messageSid;
+        //Check new status 
+        const { messageSid, id } = this.props.s;
         if (this.props.s.messageSent && this.props.s.messageStatus !== "read"){
             let result = (async function getStatus() {
-                await api.checkStatus(messageSid)
+                await api.checkStatus(messageSid, id)
             })();
             console.log(result);
         }
-        
-        
     }
 
     handleShowSendMessage(){

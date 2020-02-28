@@ -75,12 +75,17 @@ exports.sendMessage = async (req, res, next) => {
 }
 
 exports.checkStatus = async (req, res, next) => {
-  const { sid } = req.body;
+  const { sid, id } = req.body;
   const accountSid = process.env.TWILIO_SID;
   const authToken = process.env.TWILIO_TOKEN;
   const client = require('twilio')(accountSid, authToken);
   console.log("Check status", sid);
-  client.messages(sid).fetch().then(m => res.send(m.status)).catch((err) => console.log(err));
+  client.messages(sid).fetch().then(m => {
+
+      res.send(m.status)
+  }).catch((err) => 
+    console.log(err)
+  );
 }
 
 //Remove Follow up flag
@@ -91,6 +96,14 @@ async function updateFlag(id, sid, status){
           messageSent: true,
           messageSid: sid,
           messageStatus: status
+        },
+        { where: {id: id}}
+    )
+}
+async function updateStatus(id, status){
+    const result = await Session.update(
+        {
+            messageStatus: status
         },
         { where: {id: id}}
     )

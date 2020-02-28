@@ -6,6 +6,7 @@ const request = require('request');
 const roles = require('../config/roles');
 const Session = require('./model');
 const Category = require('../categories/model');
+require('dotenv').config();
 
 Session.belongsTo(Category);
 exports.sessionsList = async (req, res, next) => {
@@ -39,7 +40,7 @@ exports.newSession = async (req, res, next) => {
         notes: req.body.notes,
         tags: req.body.tags,
         user: user.id,
-        followup: req.body.followup
+        followUp: req.body.followup
     }).save();
     res.send(true);
 }
@@ -50,4 +51,47 @@ exports.updateSession = async (req, res, next) =>{
 
 exports.deleteSession = async (req, res, next) =>{
 
+}
+
+exports.sendMessage = async (req, res, next) => {
+    // Send message and remove Follow-Up Flag
+    const { id, phone } = req.body;
+    
+    let msg = '¡Hola! tenemos información relacionada a su consulta sobre Salud. Por favor responda este mensaje para chatear con un asistente';
+    const accountSid = process.env.TWILIO_SID;
+    const authToken = process.env.TWILIO_TOKEN;
+    const client = require('twilio')(accountSid, authToken);
+    client.messages.create({
+        body: msg,
+        from: 'whatsapp:+15184130994',
+        to: `whatsapp:+${phone}`,
+    }).then(m => {
+        updateFlag(id, m.sid, m.status)
+        res.json({status: m.status, sid: m.sid})}
+    ).catch((error) => {
+        res.json(error);
+    });
+      
+}
+
+exports.checkStatus = async (req, res, next) => {
+  const { sid } = req.body;
+  const accountSid = process.env.TWILIO_SID;
+  const authToken = process.env.TWILIO_TOKEN;
+  const client = require('twilio')(accountSid, authToken);
+  console.log("Check status", sid);
+  client.messages(sid).fetch().then(m => res.send(m.status)).catch((err) => console.log(err));
+}
+
+//Remove Follow up flag
+async function updateFlag(id, sid, status){
+    const result = await Session.update(
+        { 
+          followUp: false,
+          messageSent: true,
+          messageSid: sid,
+          messageStatus: status
+        },
+        { where: {id: id}}
+    )
 }

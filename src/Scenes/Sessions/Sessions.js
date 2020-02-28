@@ -1,22 +1,31 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import HistoryList from '../../components/history/HistoryList';
 import api from './api';
 import actions from './actions';
 import moment from 'moment';
+import UserSessions from './UserSessions';
 
 class Sessions extends Component{
+    constructor( props ){
+        super(props);
+    }
+    
     state = {
         sessions : [],
         loading: false,
+        showSendMessage: false
     }
 
     componentDidMount(){
-        let sessions = api.getSessions().then(list => {
+        this.getSessionList()
+    }
+    getSessionList(){
+        console.log("Load list");
+        api.getSessions().then(list => {
+            console.log("list loaded");
             this.setState( {sessions: list.rows})
         })
     }
+
     render(){
         const { sessions } = this.state;
         return (
@@ -24,19 +33,8 @@ class Sessions extends Component{
             <h3>Chat Sessions</h3>
             {sessions && sessions.length>0 &&
                 sessions.map(s => 
-                        <div key={s.id} className="sessionElement">
-                        <div className="row">
-                            <div className="pull-left"><span className="phoneNumber">{s.phone}</span> - <span className="date">{moment(s.createdAt).format('lll')}</span></div>
-                            <div className="pull-right">{s.category.name}</div>
-                        </div>
-                        <div className="notes">
-                            <div>{s.notes}</div>
-                        </div>
-                        {s.followup && 
-                        <div className="followup">FOLLOW UP</div>}
-                        
-                        
-                    </div>)}
+                        <UserSessions reload={this.getSessionList.bind(this)} key={s.id} s={s}/>
+                    )}
             
             </div>
         )

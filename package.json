@@ -43,7 +43,7 @@
     "twilio": "^3.39.4"
   },
   "scripts": {
-    "start": "node server",
+    "start": "react-scripts start",
     "build-css": "./node_modules/.bin/node-sass-chokidar src/ -o src/",
     "build": "react-scripts build",
     "build-server": "babel src -s -D -d webserver --plugins remove-nonjs --presets es2015,stage-0,react",

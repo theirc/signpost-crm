@@ -59,46 +59,6 @@ app.use("/", express.static("build"));
 
 app.listen(process.env.PORT || 8080, () => { console.log("server ready listening on port 8080")});
 
-// const validateUserAndPassword= (body) => {
-//   if(body.username && body.password){
-//     mysql_pool.getConnection(function(err, connection) {
-//       if (err) {
-//         connection.release();
-//           console.log(' Error getting mysql_pool connection: ' + err);
-//           throw err;
-//         }
-//         connection.query('Select username, name, lastname, initials, country, role from users;', function(err2, rows, fields) {	
-//           if (err2) {
-//             var data = { "Time":"", "DatabaseStatus":"" };
-//             data["Time"] = (new Date()).getTime();
-//             data["DatabaseStatus"] = "Down";
-//             return data; 
-//           } else {
-//             var dbretval = rows[0].SettingValue;
-//             if (dbretval == 1 ) {
-//               var data = { "Time":"", "DatabaseStatus":"" };
-//               data["Time"] = (new Date()).getTime();
-//               data["DatabaseStatus"] = "Up";
-//               return data;
-//               res.json(data); 
-//             } else {
-//               var data = { "Time":"", "DatabaseStatus":"" };
-//               data["Time"] = (new Date()).getTime();
-//               data["DatabaseStatus"] = "Down";
-//               return data;
-//               res.json(data); 
-//             }
-//           }
-//         console.log(' mysql_pool.release()');
-//         connection.release();
-//         });
-//     });
-//   }else{
-//      return false;
-//   }
-
-// }
-
 
 function verifyToken(req, res, next){
   const bearerHeader = req.headers['authorization'];

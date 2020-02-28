@@ -17,11 +17,12 @@ import customStyles from './customStyles';
 import Sessions from './Sessions';
 
 class CreateSession extends Component {
+    
     state = {
         phone : this.props.match.params.phone ? this.props.match.params.phone : '',
         notes: '',
         category: '',
-        followup: '',
+        followUp: '',
         history: [],
         loadingHistory: false,
         userSessions: [],
@@ -59,7 +60,7 @@ class CreateSession extends Component {
     handleChangeFollowUp = (e) => {
         console.log(e.target.checked);
         this.setState({
-            followup: e.target.checked
+            followuUp: e.target.checked
         })
     }
 

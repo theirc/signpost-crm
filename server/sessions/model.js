@@ -29,8 +29,19 @@ const Session = db.sequalize.define(
             tags: {
                 type: Sequelize.STRING
             },
-            followup: {
+            followUp: {
                 type: Sequelize.BOOLEAN
+            },
+            messageSent:{
+                type: Sequelize.BOOLEAN,
+                defaultValue: false
+
+            },
+            messageSid: {
+                type: Sequelize.STRING
+            },
+            messageStatus: {
+                type: Sequelize.STRING
             }
         })
 module.exports = Session;

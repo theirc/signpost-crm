@@ -7,9 +7,9 @@ import api from './api';
 class UserSessions extends Component{
     state = {
         showSendMessage: false,
-        followUp: this.props.s.followUp,
-        messageSent: this.props.s.messageSent,
-        messageStatus: this.props.s.messageStatus,
+        followUp: this.props.s && this.props.s.followUp,
+        messageSent: this.props.s && this.props.s.messageSent,
+        messageStatus: this.props.s && this.props.s.messageStatus,
     }
 
     componentDidMount(){

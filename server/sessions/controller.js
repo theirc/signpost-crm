@@ -98,7 +98,9 @@ async function updateFlag(id, sid, status){
           messageStatus: status
         },
         { where: {id: id}}
-    )
+    ).catch(function(err) {
+        return err
+    })
 }
 async function updateStatus(id, status){
     const result = await Session.update(

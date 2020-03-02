@@ -6,7 +6,7 @@ module.exports = {
       return Promise.all([
         queryInterface.addColumn('sessions', 'messageSid', { type: Sequelize.STRING}, { transaction: t }),
         queryInterface.addColumn('sessions', 'messageStatus', { type: Sequelize.STRING}, { transaction: t}),
-        queryInterface.renameColumn('sessions', 'followup', 'folloeUp', { transaction: t})
+        queryInterface.renameColumn('sessions', 'followup', 'followUp', { transaction: t})
       ])
     })
     /*

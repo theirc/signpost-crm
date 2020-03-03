@@ -54,7 +54,8 @@ class UserSessions extends Component{
     render(){
         const s = this.props.s;
         const { followUp } = this.state;
-        const { showFolloUpActions } = this.props;
+        const { showFollowUpActions } = this.props;
+        console.log("showFolloUpActions",showFollowUpActions);
         return (
             <div key={s.id} className="sessionElement">
                 {this.state.showSendMessage && <div className="overlay" onClick={this.handleHideSendMessage.bind(this)}></div>}
@@ -68,7 +69,7 @@ class UserSessions extends Component{
                 {followUp && 
                 <div className="footer">
                 <div className="followUp">FOLLOW UP</div>
-                {!this.state.showSendMessage && showFolloUpActions && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
+                {!this.state.showSendMessage && showFollowUpActions && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
                 </div>
                 }
                 {!followUp && s.messageSent && 

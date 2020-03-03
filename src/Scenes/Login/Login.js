@@ -39,8 +39,8 @@ export const Login = props => {
 				setLoading(false);
 				if (res) {
 					res.loggedIn = new Date().toString();
-					props.setUser(res.user);
 					props.setToken(res.token);
+					props.setUser(res.user);
 				}else{
 					setMessage('Wrong credentials');
 				}

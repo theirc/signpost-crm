@@ -16,10 +16,12 @@ class Sessions extends Component{
     }
 
     componentDidMount(){
-        this.getSessionList()
+        console.log("Gettin list");
+        this.getSessionList();
     }
     getSessionList(){
         api.getSessions().then(list => {
+            console.log("Got the list", list);
             this.setState( {sessions: list.rows})
         })
     }

@@ -80,8 +80,13 @@ exports.checkStatus = async (req, res, next) => {
   const authToken = process.env.TWILIO_TOKEN;
   const client = require('twilio')(accountSid, authToken);
   client.messages(sid).fetch().then(m => {
-
-      res.send(m.status)
+    Session.update(
+        {
+            messageStatus: m.status
+        },
+        { where: {id: id}}
+    )
+    res.json(m.status)
   }).catch((err) => 
     console.log(err)
   );

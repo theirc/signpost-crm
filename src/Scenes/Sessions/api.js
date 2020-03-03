@@ -38,14 +38,14 @@ const api = {
         if (!login.user) return '';
         let headers = composeHeader(login.token);
 
-        return fetch(url, {method: 'POST', headers: headers, body: JSON.stringify({ phone: phone, id: id })}).then(r =>  r.json()).then(res => { return res} );
+        return fetch(url, {method: 'POST', headers: headers, body: JSON.stringify({ phone: phone, id: id })}).then(r => r.json()).then(res => { return res} );
     },
-    checkStatus: async(sid) => {
+    checkStatus: async(sid, id) => {
         const url = '/api/sessions/check-status';
         let { login } = store.getState();
         if (!login.user) return '';
         let headers = composeHeader(login.token);
-        let result = await fetch(url, {method: 'POST', headers: headers, body: JSON.stringify({ sid: sid })}).then(r =>  {return r});
+        return fetch(url, {method: 'POST', headers: headers, body: JSON.stringify({ sid: sid, id: id })}).then(r => { return r.json() }).then( res => { return res });
     }
 
 }

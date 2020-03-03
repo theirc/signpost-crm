@@ -13,12 +13,22 @@ class UserSessions extends Component{
     }
 
     componentDidMount(){
-        //Check new status 
+        //Check new status
+        this.checkStatus(); 
+        // const { messageSid, id } = this.props.s;
+        // if (this.props.s.messageSent && this.props.s.messageStatus !== "read"){
+        //     let result = await api.checkStatus(messageSid, id);
+           
+        //     console.log(result);
+        // }
+    }
+
+    async checkStatus(){
         const { messageSid, id } = this.props.s;
         if (this.props.s.messageSent && this.props.s.messageStatus !== "read"){
-            let result = (async function getStatus() {
-                await api.checkStatus(messageSid, id)
-            })();
+            let result = await api.checkStatus(messageSid, id);
+            console.log("result", result);
+            this.setState({messageStatus: result});
         }
     }
 
@@ -55,7 +65,6 @@ class UserSessions extends Component{
         const s = this.props.s;
         const { followUp } = this.state;
         const { showFollowUpActions } = this.props;
-        console.log("showFolloUpActions",showFollowUpActions);
         return (
             <div key={s.id} className="sessionElement">
                 {this.state.showSendMessage && <div className="overlay" onClick={this.handleHideSendMessage.bind(this)}></div>}
@@ -68,12 +77,12 @@ class UserSessions extends Component{
                 </div>
                 {followUp && 
                 <div className="footer">
-                <div className="followUp">FOLLOW UP</div>
+                <div className="followUp">FOLLOW UP NEEDED</div>
                 {!this.state.showSendMessage && showFollowUpActions && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
                 </div>
                 }
                 {!followUp && s.messageSent && 
-                    <div className="message-status"><div className="messageSent">MESSAGE SENT</div><i className="material-icons message-status-icon tooltiped" >{this.getIcon(s.messageStatus)}</i><div className="tooltip">{s.messageStatus}</div>
+                    <div className="message-status"><div className="messageSent">MESSAGE SENT</div><i className="material-icons message-status-icon tooltiped" >{this.getIcon(this.state.messageStatus)}</i><div className="tooltip">{this.state.messageStatus}</div>
                     </div>
                 }
                 {this.state.showSendMessage &&

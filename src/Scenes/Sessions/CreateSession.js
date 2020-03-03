@@ -29,21 +29,8 @@ class CreateSession extends Component {
     }
 
     componentDidMount(){
-        console.log("did mount", this.props.match);
         if (this.props.match && this.props.match.params.phone){
-            console.log("Phone", this.props.match.params.phone);
-            api.getSessions(this.props.match.params.phone).then(list => {
-                console.log(list);
-                this.setState({userSessions: list.rows})
-            });
-            fetch(`https://mustard-himalayan-7945.twil.io/get_logs?phone=${this.props.match.params.phone}`)
-            .then((response) => {
-                return response.json()
-            })
-            .then((history) => {
-                this.setState({history: history.result, loadingHistory: false});
-                
-            })
+            this.searchSessions(this.props.match.params.phone);
         }
     }
     handleChange = (e) =>{
@@ -58,7 +45,6 @@ class CreateSession extends Component {
     }
 
     handleChangeFollowUp = (e) => {
-        console.log(e.target.checked);
         this.setState({
             followuUp: e.target.checked
         })
@@ -74,6 +60,23 @@ class CreateSession extends Component {
     updateTaskCount = (count) => {
         this.setState({taskCount : count});
     }
+    handleSearch = (e) => {
+        e.preventDefault();
+        this.searchSessions(this.state.phone);
+    }
+    searchSessions = (phone) => {
+        api.getSessions(phone).then(list => {
+            this.setState({userSessions: list.rows})
+        });
+        fetch(`https://mustard-himalayan-7945.twil.io/get_logs?phone=${phone}`)
+        .then((response) => {
+            return response.json()
+        })
+        .then((history) => {
+            this.setState({history: history.result, loadingHistory: false});
+            
+        })
+    }
 
     render() {
         
@@ -82,7 +85,7 @@ class CreateSession extends Component {
         const categories = [{Category:"Health", value: 1}, {Category: "Women", value: 3}, {Category:"Violence", value: 2 }];
         const saveDisabled = phone && category ? "": "disabled";
         const catOptions = categories && categories.map(c => {return {value: c.value, label: c.Category}});
-
+        const showSessions = userSessions != null && userSessions.length > 0 ? true : false;
         if (user && !user.id) return <Redirect to="/signin"/>
         return (
             <div className="createSession">
@@ -139,33 +142,12 @@ class CreateSession extends Component {
                     </div>
                     <div className="col s6">
                         <h5>Activity</h5>
-                        <UserSessions sessions={userSessions}/>
+                        {showSessions && userSessions && userSessions.length>0 &&
+                                userSessions.map(s => 
+                                     <UserSessions showFollowUpActions={false} key={s.id} s={s}/>
+                        )}
                     </div>
                 </div>
-                
-                {/* {phone && 
-                <div className="row m-t-50">
-                    <Tabs forceRenderTabPanel={true}>
-                        <TabList>
-                            <Tab>Sessions</Tab>
-                            <Tab>History</Tab>
-                        </TabList>
-                        <TabPanel>
-                            {phone && userSessions && userSessions.length > 0 && 
-                                <div className="col s12"> 
-                                    {<UserSessions sessions={userSessions}/>}
-                                </div> 
-                            }
-                        </TabPanel>
-                        <TabPanel>
-                            {history && history.length > 0 &&
-                                <div className="col s12"> 
-                                    <HistoryList history={history} phone={phone}/>
-                                </div>}
-                        </TabPanel>
-                    </Tabs>
-                </div>
-                } */}
             </div>
         </div>
         )

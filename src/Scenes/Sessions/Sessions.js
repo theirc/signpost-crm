@@ -19,9 +19,7 @@ class Sessions extends Component{
         this.getSessionList()
     }
     getSessionList(){
-        console.log("Load list");
         api.getSessions().then(list => {
-            console.log("list loaded");
             this.setState( {sessions: list.rows})
         })
     }

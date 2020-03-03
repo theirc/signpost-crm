@@ -6,7 +6,6 @@ import loginActions from '../../Scenes/Login/actions';
 
 const Navbar = (props) => {
     const { user, flex } = props;
-    console.log(user);
     const homeLink = flex ? "/flex" : "/";
     return (
          <nav className="nav-wrapper grey darken-3">

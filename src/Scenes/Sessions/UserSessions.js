@@ -19,7 +19,6 @@ class UserSessions extends Component{
             let result = (async function getStatus() {
                 await api.checkStatus(messageSid, id)
             })();
-            console.log(result);
         }
     }
 
@@ -32,15 +31,12 @@ class UserSessions extends Component{
     async handleSendMessage(){
         const { phone, id } = this.props.s; 
         let result = await api.sendMessage(phone, id);
-        console.log("result",result);
         this.setState({followUp: false, messageSent: true, showSendMessage: false, messageStatus: result && result.status, messageSid: result && result.sid});
     }
     updateState(){
-        console.log("update state")
     }
 
     getIcon(status){
-        console.log(status);
         switch(status){
             case "queued":
                 return "access_time";
@@ -57,13 +53,14 @@ class UserSessions extends Component{
 
     render(){
         const s = this.props.s;
-        const { followUp } = this.state
+        const { followUp } = this.state;
+        const { showFolloUpActions } = this.props;
         return (
             <div key={s.id} className="sessionElement">
                 {this.state.showSendMessage && <div className="overlay" onClick={this.handleHideSendMessage.bind(this)}></div>}
                 <div className="row">
                     <div className="pull-left"><span className="phoneNumber">{s.phone}</span> - <span className="date">{moment(s.createdAt).format('lll')}</span></div>
-                    <div className="pull-right">{s.category.name}</div>
+                    <div className="pull-right">{s.category && s.category.name}</div>
                 </div>
                 <div className="notes">
                     <div>{s.notes}</div>
@@ -71,7 +68,7 @@ class UserSessions extends Component{
                 {followUp && 
                 <div className="footer">
                 <div className="followUp">FOLLOW UP</div>
-                {!this.state.showSendMessage && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
+                {!this.state.showSendMessage && showFolloUpActions && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
                 </div>
                 }
                 {!followUp && s.messageSent && 

@@ -24,7 +24,6 @@ app.use(express.static('build'));
 
 
 app.use(function(req, res, next) {
-  console.log("DEFAULT");
   //res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
@@ -75,7 +74,6 @@ function verifyToken(req, res, next){
 
 
 function getChatNumbers(req, res){
-  console.log("GET Numbers");
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
   res.header('Cache-Control', 'no-cache');
   const sid = process.env.TWILIO_SID;
@@ -87,11 +85,9 @@ function getChatNumbers(req, res){
       dateSentAfter: new Date(Date.UTC(2020, 1, 1, 0, 0, 0)),
       from:'whatsapp:+15184130994',
   }).then(list => {
-      console.log(list.length);
       //list.forEach(m => console.log(m.body.replace("\n", "").substr(0,30)))
       
       let chats = list.filter(m => m.body.toLowerCase().indexOf("pronto un asistente") > -1);
-      //console.log(chats.length);
       chats.forEach(m => numbers.push(m.to));;
       let phoneNumbers = [...new Set(numbers)];
       res.json(phoneNumbers);

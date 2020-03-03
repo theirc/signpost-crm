@@ -24,7 +24,6 @@ exports.login = async (req, res, next) => {
                         if (!error && response.statusCode == 200 && jbody.result){
                             //User authenticated
                             jwt.sign({user}, process.env.JWT_SECRET, { expiresIn: '86400s' }, (err, token) => {
-                                console.log("**** TOKEN ****", token);
                                 res.json({ token: token, user: user });
                             })
                         }else{

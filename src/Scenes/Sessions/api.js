@@ -24,7 +24,6 @@ const api = {
         if (!login.user) return [];
         let headers = composeHeader(login.token);
         store.dispatch(actions.saveSession(null));
-        console.log("Save session", headers, session);
         return fetch(url, {method: 'POST', headers: headers, body: JSON.stringify(session)} ).then(r => console.log(r));
     },
     viewSession: (id) => {

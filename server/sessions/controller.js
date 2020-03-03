@@ -40,7 +40,7 @@ exports.newSession = async (req, res, next) => {
         notes: req.body.notes,
         tags: req.body.tags,
         user: user.id,
-        followUp: req.body.followup
+        followUp: req.body.followUp
     }).save();
     res.send(true);
 }

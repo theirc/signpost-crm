@@ -52,6 +52,8 @@ class UserSessions extends Component{
                 return "access_time";
             case "sent":
                 return "done";
+            case "delivered":
+                return "done";
             case "received":
                 return "done_all";
             case "read":

@@ -31,7 +31,7 @@ class Sessions extends Component{
             <h3>Chat Sessions</h3>
             {sessions && sessions.length>0 &&
                 sessions.map(s => 
-                        <UserSessions reload={this.getSessionList.bind(this)} key={s.id} s={s}/>
+                        <UserSessions showFollowUpActions={true} reload={this.getSessionList.bind(this)} key={s.id} s={s}/>
                     )}
             
             </div>

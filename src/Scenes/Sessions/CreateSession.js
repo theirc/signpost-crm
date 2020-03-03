@@ -45,8 +45,9 @@ class CreateSession extends Component {
     }
 
     handleChangeFollowUp = (e) => {
+        console.log("Follow up", e.target.checked)
         this.setState({
-            followuUp: e.target.checked
+            followUp: e.target.checked
         })
     }
 

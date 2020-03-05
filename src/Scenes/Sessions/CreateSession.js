@@ -30,9 +30,9 @@ class CreateSession extends Component {
     }
 
     componentDidMount(){
+        this.getCategoryList();
         if (this.props.match && this.props.match.params.phone){
             this.searchSessions(this.props.match.params.phone);
-            this.getCategoryList();
         }
     }
     handleChange = (e) =>{

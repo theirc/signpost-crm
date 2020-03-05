@@ -57,10 +57,9 @@ class CreateSession extends Component {
         const session = this.state;
         session.userSessions = null;
         session.history = null;
-        api.saveSession(session);
-        const {flex } = this.props;
-
-        this.props.history.push(flex ? "/flex" : "/");
+        const { flex } = this.props;
+        api.saveSession(session).then(result => this.props.history.push(flex ? "/flex" : "/"));
+        
     }
     updateTaskCount = (count) => {
         this.setState({taskCount : count});

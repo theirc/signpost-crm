@@ -39,6 +39,7 @@ exports.getSession = async (req, res, next) =>{
 
 exports.newSession = async (req, res, next) => {
     const {user} = req;
+    let catList = req.body.categories && req.body.categories.map(c => c.value)
     let session = Session.build({
         phone: req.body.phone,
         categories: req.body.categories,
@@ -49,14 +50,13 @@ exports.newSession = async (req, res, next) => {
     })
     session.save()
     .then((session) => {
-        session.addCategory([5,6,7]);
+        session.addCategory(catList);
         session.save().then((session) =>
             res.send(session)
         )
         .catch((err) => res.send(err));;
     }
     )
-    
 }
 
 exports.updateSession = async (req, res, next) =>{

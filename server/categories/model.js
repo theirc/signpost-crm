@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
 
-const Category = db.sequalize.define(
+const Category = db.sequelize.define(
         'category', 
         {
             id: {

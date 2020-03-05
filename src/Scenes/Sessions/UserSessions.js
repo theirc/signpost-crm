@@ -62,17 +62,22 @@ class UserSessions extends Component{
                 return "access_time";
         }
     }
+    getCategories(categories){
+        let list = categories.map(c => {return c.name });
+        return list.join(", ");
+    }
 
     render(){
         const s = this.props.s;
         const { followUp } = this.state;
         const { showFollowUpActions } = this.props;
+        const categories = this.getCategories(this.props.s.categories)
         return (
             <div key={s.id} className="sessionElement">
                 {this.state.showSendMessage && <div className="overlay" onClick={this.handleHideSendMessage.bind(this)}></div>}
                 <div className="row">
                     <div className="pull-left"><span className="phoneNumber">{s.phone}</span> - <span className="date">{moment(s.createdAt).format('lll')}</span></div>
-                    <div className="pull-right">{s.category && s.category.name}</div>
+                    <div className="pull-right categories">{categories}</div>
                 </div>
                 <div className="notes">
                     <div>{s.notes}</div>

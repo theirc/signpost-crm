@@ -18,6 +18,19 @@ const api = {
             })
         })
     },
+    getCategories: () => {
+        const url = '/api/categories';
+        let { login } = store.getState();
+        if (!login.user) return [];
+        return new Promise((resolve, reject) => {
+            let headers = composeHeader(login.token);
+            fetch(url, {method: 'GET', headers: headers})
+            .then(r => r.json())
+            .then(list => {
+                resolve(list);
+            })
+        })
+    },
     saveSession: (session) => {
         const url = '/api/sessions';
         let { login } = store.getState();

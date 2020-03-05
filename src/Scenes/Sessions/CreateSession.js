@@ -21,11 +21,11 @@ class CreateSession extends Component {
     state = {
         phone : this.props.match.params.phone ? this.props.match.params.phone : '',
         notes: '',
-        category: '',
-        followUp: '',
+        followUp: 0,
         history: [],
         loadingHistory: false,
         userSessions: [],
+        categories: null
     }
 
     componentDidMount(){
@@ -39,8 +39,9 @@ class CreateSession extends Component {
         })
     }
     handleChangeCategory = (e) => {
+        console.log("Category",e);
         this.setState({
-            category: e.value
+            categories: e
         })
     }
 
@@ -53,7 +54,10 @@ class CreateSession extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        api.saveSession(this.state);
+        const session = this.state;
+        session.userSessions = null;
+        session.history = null;
+        api.saveSession(session);
         const {flex } = this.props;
 
         this.props.history.push(flex ? "/flex" : "/");
@@ -82,10 +86,11 @@ class CreateSession extends Component {
     render() {
         
         const { user, flex } = this.props;
-        const { phone, loadingHistory, history, category, userSessions, tasks, taskCount } = this.state;
-        const categories = [{Category:"Health", value: 1}, {Category: "Women", value: 3}, {Category:"Violence", value: 2 }];
-        const saveDisabled = phone && category ? "": "disabled";
-        const catOptions = categories && categories.map(c => {return {value: c.value, label: c.Category}});
+        const { phone, loadingHistory, history, categories, userSessions, tasks, taskCount } = this.state;
+        console.log("Phone", phone, "Categories", categories);
+        const categoryList = [{Category:"Health", value: 7}, {Category: "Women", value: 8}, {Category:"Violence", value: 9 }];
+        const saveDisabled = phone && categories && categories.length > 0 ? "": "disabled";
+        const catOptions = categoryList && categoryList.map(c => {return {value: c.value, label: c.Category}});
         const showSessions = userSessions != null && userSessions.length > 0 ? true : false;
         if (user && !user.id) return <Redirect to="/signin"/>
         return (
@@ -109,7 +114,7 @@ class CreateSession extends Component {
                             
                             <div className="input m-t-20">
                                 <label htmlFor="category" className="m-b-20">Category</label>
-                                <Select id="category" styles={customStyles} options={catOptions} onChange={this.handleChangeCategory}/>
+                                <Select id="category" isMulti={true} values={categories} styles={customStyles} options={catOptions} onChange={this.handleChangeCategory}/>
                             </div>
                             <label className="m-t-20">
                                 <input type="checkbox" id="followup" onClick={this.handleChangeFollowUp} />

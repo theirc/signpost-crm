@@ -15,7 +15,7 @@ const sequelize = new Sequelize(process.env.DBNAME, process.env.DB_USER, process
     }
 })
 
-db.sequalize = sequelize
-db.Sequalize = Sequelize
+db.sequelize = sequelize
+db.Sequelize = Sequelize
 
 module.exports = db;

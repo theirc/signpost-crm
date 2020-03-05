@@ -134,3 +134,7 @@ h5{
     opacity: 1;
     transition: visibility 0.2s linear 0.33s, opacity 0.5s linear;
 }
+.categories{
+    max-width: 60%;
+    text-align: right;
+}

@@ -8,7 +8,10 @@ const Session = require('./model');
 const Category = require('../categories/model');
 require('dotenv').config();
 
-Session.belongsTo(Category);
+//Session.belongsTo(Category);
+Session.belongsToMany(Category, { through: 'Session_Categories' });
+Category.belongsToMany(Session, { through: 'Session_Categories' });
+
 exports.sessionsList = async (req, res, next) => {
     const { user } = req;
     const { phone } = req.query;
@@ -19,7 +22,9 @@ exports.sessionsList = async (req, res, next) => {
     Session.findAndCountAll({
         where: where,
         include: [
-            {model: Category}
+            {
+                model: Category
+            }
         ],
         order: [['createdAt', 'DESC']],
         limit: 20
@@ -34,15 +39,24 @@ exports.getSession = async (req, res, next) =>{
 
 exports.newSession = async (req, res, next) => {
     const {user} = req;
-    Session.build({
+    let session = Session.build({
         phone: req.body.phone,
-        categoryId: req.body.category,
+        categories: req.body.categories,
         notes: req.body.notes,
         tags: req.body.tags,
         user: user.id,
         followUp: req.body.followUp
-    }).save();
-    res.send(true);
+    })
+    session.save()
+    .then((session) => {
+        session.addCategory([5,6,7]);
+        session.save().then((session) =>
+            res.send(session)
+        )
+        .catch((err) => res.send(err));;
+    }
+    )
+    
 }
 
 exports.updateSession = async (req, res, next) =>{
@@ -91,7 +105,16 @@ exports.checkStatus = async (req, res, next) => {
     console.log(err)
   );
 }
+exports.completeFollowUp = (req, res, next) => {
+    const { phone } = req.body;
+    Session.findAll({
+        limit :1,
+        where: { phone: phone},
+        order: [ [ 'id', 'DESC' ]]
+    }).then((entries) => {
 
+    })
+}
 //Remove Follow up flag
 async function updateFlag(id, sid, status){
     const result = await Session.update(

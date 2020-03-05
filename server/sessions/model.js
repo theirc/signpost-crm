@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../config/db');
 const Category = require('../categories/model');
 
-const Session = db.sequalize.define(
+const Session = db.sequelize.define(
         'session', 
         {
             id: {
@@ -12,13 +12,6 @@ const Session = db.sequalize.define(
             },
             phone: {
                 type: Sequelize.STRING
-            },
-            categoryId: {
-                type: Sequelize.INTEGER,
-                references:{
-                    model: Category,
-                    key: 'id'
-                }
             },
             notes: {
                 type: Sequelize.STRING
@@ -45,3 +38,20 @@ const Session = db.sequalize.define(
             }
         })
 module.exports = Session;
+
+exports.Session_Categories = db.sequelize.define('session_categories', {
+    SessionId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: Session, 
+        key: 'id'
+      }
+    },
+    CategoryId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: Category, 
+        key: 'id'
+      }
+    }
+  });

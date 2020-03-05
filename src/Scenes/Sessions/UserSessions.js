@@ -95,7 +95,7 @@ class UserSessions extends Component{
                 {this.state.showSendMessage &&
                 <div className="hoverable">
                     <h6><strong>Send the following message and remove 'Follow Up' flag</strong></h6>
-                    <h6>¡Hola! tenemos información relacionada a su consulta sobre <strong>{s.category.name}</strong>. Por favor responda este mensaje para chatear con un asistente</h6>
+                    <h6>¡Hola! tenemos información relacionada a su consulta. Por favor responda este mensaje para chatear con un asistente</h6>
                     <div className="message-footer">
                     <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleSendMessage.bind(this)}>Send <i className="material-icons right">send</i></a>
                     <a className="waves-effect waves-light btn b deep-orange accent-4 btn-message" onClick={this.handleHideSendMessage.bind(this)}>Cancel<i className="material-icons right">cancel</i></a>

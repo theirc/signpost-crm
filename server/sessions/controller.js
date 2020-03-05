@@ -71,7 +71,7 @@ exports.sendMessage = async (req, res, next) => {
     // Send message and remove Follow-Up Flag
     const { id, phone } = req.body;
     
-    let msg = '¡Hola! tenemos información relacionada a su consulta sobre Salud. Por favor responda este mensaje para chatear con un asistente';
+    let msg = '¡Hola! tenemos información relacionada a su consulta. Por favor responda este mensaje para chatear con un asistente';
     const accountSid = process.env.TWILIO_SID;
     const authToken = process.env.TWILIO_TOKEN;
     const client = require('twilio')(accountSid, authToken);

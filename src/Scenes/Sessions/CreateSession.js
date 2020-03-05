@@ -25,12 +25,14 @@ class CreateSession extends Component {
         history: [],
         loadingHistory: false,
         userSessions: [],
-        categories: null
+        categories: null,
+        categoryList: []
     }
 
     componentDidMount(){
         if (this.props.match && this.props.match.params.phone){
             this.searchSessions(this.props.match.params.phone);
+            this.getCategoryList();
         }
     }
     handleChange = (e) =>{
@@ -39,14 +41,12 @@ class CreateSession extends Component {
         })
     }
     handleChangeCategory = (e) => {
-        console.log("Category",e);
         this.setState({
             categories: e
         })
     }
 
     handleChangeFollowUp = (e) => {
-        console.log("Follow up", e.target.checked)
         this.setState({
             followUp: e.target.checked
         })
@@ -69,6 +69,7 @@ class CreateSession extends Component {
         e.preventDefault();
         this.searchSessions(this.state.phone);
     }
+
     searchSessions = (phone) => {
         api.getSessions(phone).then(list => {
             this.setState({userSessions: list.rows})
@@ -83,14 +84,18 @@ class CreateSession extends Component {
         })
     }
 
+    getCategoryList = () => {
+        api.getCategories().then(list => {
+            this.setState({categoryList : list.rows});
+        })
+    }
+
     render() {
         
         const { user, flex } = this.props;
-        const { phone, loadingHistory, history, categories, userSessions, tasks, taskCount } = this.state;
-        console.log("Phone", phone, "Categories", categories);
-        const categoryList = [{Category:"Health", value: 7}, {Category: "Women", value: 8}, {Category:"Violence", value: 9 }];
+        const { phone, loadingHistory, history, categories, userSessions, tasks, taskCount, categoryList } = this.state;
         const saveDisabled = phone && categories && categories.length > 0 ? "": "disabled";
-        const catOptions = categoryList && categoryList.map(c => {return {value: c.value, label: c.Category}});
+        const catOptions = categoryList && categoryList.map(c => {return {value: c.id, label: c.name}});
         const showSessions = userSessions != null && userSessions.length > 0 ? true : false;
         if (user && !user.id) return <Redirect to="/signin"/>
         return (

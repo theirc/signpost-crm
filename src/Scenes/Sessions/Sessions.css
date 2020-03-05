@@ -138,3 +138,16 @@ h5{
     max-width: 60%;
     text-align: right;
 }
+.followUpCompleted{
+    height: 21px;
+    font-size: 10px;
+    width: -moz-fit-content;
+    width: fit-content;
+    padding: 3px 15px;
+    right: 83px;
+    margin-top: 10px;
+    border-radius: 6px;
+    float: left;
+    border: 1px #7d7c6c solid;
+    color: white;
+}

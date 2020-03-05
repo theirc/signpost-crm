@@ -35,7 +35,12 @@ const Session = db.sequelize.define(
             },
             messageStatus: {
                 type: Sequelize.STRING
-            }
+            },
+            followUpCompleted:{
+                type: Sequelize.BOOLEAN,
+                defaultValue: false
+
+            },
         })
 module.exports = Session;
 

@@ -109,10 +109,12 @@ exports.completeFollowUp = (req, res, next) => {
     const { phone } = req.body;
     Session.findAll({
         limit :1,
-        where: { phone: phone},
+        where: { phone: phone, followUpCompleted: false, messageSent: true },
         order: [ [ 'id', 'DESC' ]]
     }).then((entries) => {
-
+        if(entries){
+            entries[0].update({ followUpCompleted : true }).then((result) => res.json(result));
+        }
     })
 }
 //Remove Follow up flag

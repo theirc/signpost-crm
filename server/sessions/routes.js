@@ -11,6 +11,7 @@ router.route('/:id').get(verifyToken, controller.getSession);
 router.route('/').post(verifyToken, controller.newSession);
 router.route('/send-message').post(verifyToken, controller.sendMessage);
 router.route('/check-status').post(verifyToken, controller.checkStatus);
+router.route('/complete').post(controller.completeFollowUp);
 router.route('/:id').put(verifyToken, controller.updateSession);
 router.route('/:id').delete(verifyToken, controller.deleteSession);
 module.exports = router;

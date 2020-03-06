@@ -72,6 +72,7 @@ class UserSessions extends Component{
         const { followUp } = this.state;
         const { showFollowUpActions } = this.props;
         const categories = this.getCategories(this.props.s.categories)
+        const showFollowUpFooter = followUp || s.followUpCompleted;
         return (
             <div key={s.id} className="sessionElement">
                 {this.state.showSendMessage && <div className="overlay" onClick={this.handleHideSendMessage.bind(this)}></div>}
@@ -82,7 +83,7 @@ class UserSessions extends Component{
                 <div className="notes">
                     <div>{s.notes}</div>
                 </div>
-                {followUp && 
+                {showFollowUpFooter && 
                 <div className="footer">
                     {!s.followUpCompleted && <div className="followUp">FOLLOW UP NEEDED</div>}
                     {s.followUpCompleted && <div className="followUpCompleted">FOLLOW UP COMPLETED</div>}

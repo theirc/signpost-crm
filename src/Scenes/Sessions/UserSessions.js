@@ -87,7 +87,7 @@ class UserSessions extends Component{
                 <div className="footer">
                     {!s.followUpCompleted && <div className="followUp">FOLLOW UP NEEDED</div>}
                     {s.followUpCompleted && <div className="followUpCompleted">FOLLOW UP COMPLETED</div>}
-                {!this.state.showSendMessage && showFollowUpActions && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
+                {!this.state.showSendMessage && showFollowUpActions && !s.followUpCompleted && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
                 </div>
                 }
                 {!followUp && s.messageSent && 

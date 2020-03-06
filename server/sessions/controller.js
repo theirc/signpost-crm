@@ -67,6 +67,7 @@ exports.deleteSession = async (req, res, next) =>{
 
 }
 
+
 exports.sendMessage = async (req, res, next) => {
     // Send message and remove Follow-Up Flag
     const { id, phone } = req.body;
@@ -106,16 +107,20 @@ exports.checkStatus = async (req, res, next) => {
   );
 }
 exports.completeFollowUp = (req, res, next) => {
-    const { phone } = req.body;
+    const { phone }  = req.body;
+    let number = phone.indexOf(":") > -1 ? phone.split(":")[1].replace("+", "") : phone.replace("+", "");
+    if(number){
     Session.findAll({
         limit :1,
-        where: { phone: phone, followUpCompleted: false, messageSent: true },
+        where: { phone: number, followUpCompleted: false, messageSent: true },
         order: [ [ 'id', 'DESC' ]]
     }).then((entries) => {
         if(entries){
-            entries[0].update({ followUpCompleted : true }).then((result) => res.json(result));
+            entries[0] && entries[0].update({ followUpCompleted : true }).then((result) => res.json(result));
         }
-    })
+    })}else{
+        res.send("Wrong phone number");
+    }
 }
 //Remove Follow up flag
 async function updateFlag(id, sid, status){

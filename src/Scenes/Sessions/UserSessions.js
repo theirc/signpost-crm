@@ -90,7 +90,7 @@ class UserSessions extends Component{
                 {!this.state.showSendMessage && showFollowUpActions && !s.followUpCompleted && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
                 </div>
                 }
-                {!followUp && s.messageSent && 
+                {!followUp && s.messageSent && !s.followUpCompleted &&
                     <div className="message-status"><div className="messageSent">MESSAGE SENT</div><i className="material-icons message-status-icon tooltiped" >{this.getIcon(this.state.messageStatus)}</i><div className="tooltip">{this.state.messageStatus}</div>
                     </div>
                 }

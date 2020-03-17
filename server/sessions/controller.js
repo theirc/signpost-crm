@@ -83,10 +83,13 @@ exports.sendMessage = async (req, res, next) => {
     }).then(m => {
         console.log("message", m);
         (async function UpdateFlag(){
+            console.log("updating flag");
             const result = await updateFlag(id, m.sid, m.status);
-        })()
-        res.json({status: m.status, sid: m.sid})}
-    ).catch((error) => {
+            console.log("flag updated");
+            console.log("sending res");
+            res.json({status: m.status, sid: m.sid})
+        })();
+    }).catch((error) => {
         res.json(error);
     });
       
@@ -135,10 +138,14 @@ async function updateFlag(id, sid, status){
           messageStatus: status
         },
         { where: {id: id}}
-    ).catch(function(err) {
+    ).then(r => {
+        console.log("update flag completed");
+        return r;
+    })
+    .catch(function(err) {
         return err
     })
-    return result;
+    console.log("Finish update")
 }
 
 async function updateStatus(id, status){

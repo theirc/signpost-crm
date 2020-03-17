@@ -10,6 +10,8 @@ class UserSessions extends Component{
         followUp: this.props.s && this.props.s.followUp,
         messageSent: this.props.s && this.props.s.messageSent,
         messageStatus: this.props.s && this.props.s.messageStatus,
+        followUpCompleted: this.props.s && this.props.s.followUpCompleted,
+        messageSid: this.props.s && this.props.s.messageSid,
     }
 
     componentDidMount(){
@@ -25,10 +27,10 @@ class UserSessions extends Component{
     }
 
     async checkStatus(){
-        const { messageSid, id } = this.props.s;
+        const { id } = this.props.s;
         if (this.props.s.messageSent && this.props.s.messageStatus !== "read"){
-            let result = await api.checkStatus(messageSid, id);
-            console.log("result", result);
+            let result = await api.checkStatus(this.state.messageSid, id);
+            console.log("result status", result);
             this.setState({messageStatus: result});
         }
     }
@@ -42,7 +44,8 @@ class UserSessions extends Component{
     async handleSendMessage(){
         const { phone, id } = this.props.s; 
         let result = await api.sendMessage(phone, id);
-        this.setState({followUp: false, messageSent: true, showSendMessage: false, messageStatus: result && result.status, messageSid: result && result.sid});
+        console.log("Result",result);
+        this.setState({followUp: false, messageSent: true, showSendMessage: false, messageStatus: result && result.status, messageSid: result && result.sid, followUpCompleted: false, messageSid: result.sid});
     }
     
     updateState(){
@@ -71,7 +74,7 @@ class UserSessions extends Component{
 
     render(){
         const s = this.props.s;
-        const { followUp } = this.state;
+        const { followUp, messageSent, followUpCompleted } = this.state;
         const { showFollowUpActions } = this.props;
         const categories = this.getCategories(this.props.s.categories)
         const showFollowUpFooter = followUp || s.followUpCompleted;
@@ -92,7 +95,7 @@ class UserSessions extends Component{
                 {!this.state.showSendMessage && showFollowUpActions && !s.followUpCompleted && <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleShowSendMessage.bind(this)}>Send message<i className="material-icons right">send</i></a>}
                 </div>
                 }
-                {!followUp && s.messageSent && !s.followUpCompleted &&
+                {!followUp && messageSent && !followUpCompleted &&
                     <div className="message-status"><div className="messageSent">MESSAGE SENT</div><i className="material-icons message-status-icon tooltiped" >{this.getIcon(this.state.messageStatus)}</i><div className="tooltip">{this.state.messageStatus}</div>
                     </div>
                 }

@@ -72,7 +72,7 @@ exports.sendMessage = async (req, res, next) => {
     // Send message and remove Follow-Up Flag
     const { id, phone } = req.body;
     
-    let msg = '¡Hola! tenemos información relacionada a su consulta. Por favor responda este mensaje para chatear con un asistente';
+    let msg = '¡Hola! tenemos información relacionada a su consulta sobre CuentaNos. Por favor responda este mensaje para chatear con un asistente';
     const accountSid = process.env.TWILIO_SID;
     const authToken = process.env.TWILIO_TOKEN;
     const client = require('twilio')(accountSid, authToken);
@@ -81,7 +81,10 @@ exports.sendMessage = async (req, res, next) => {
         from: 'whatsapp:+15184130994',
         to: `whatsapp:+${phone}`,
     }).then(m => {
-        updateFlag(id, m.sid, m.status)
+        console.log("message", m);
+        (async function UpdateFlag(){
+            const result = await updateFlag(id, m.sid, m.status);
+        })()
         res.json({status: m.status, sid: m.sid})}
     ).catch((error) => {
         res.json(error);
@@ -135,7 +138,9 @@ async function updateFlag(id, sid, status){
     ).catch(function(err) {
         return err
     })
+    return result;
 }
+
 async function updateStatus(id, status){
     const result = await Session.update(
         {

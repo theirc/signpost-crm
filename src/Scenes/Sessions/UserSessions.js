@@ -15,6 +15,7 @@ class UserSessions extends Component{
     componentDidMount(){
         //Check new status
         this.checkStatus(); 
+        
         // const { messageSid, id } = this.props.s;
         // if (this.props.s.messageSent && this.props.s.messageStatus !== "read"){
         //     let result = await api.checkStatus(messageSid, id);
@@ -43,6 +44,7 @@ class UserSessions extends Component{
         let result = await api.sendMessage(phone, id);
         this.setState({followUp: false, messageSent: true, showSendMessage: false, messageStatus: result && result.status, messageSid: result && result.sid});
     }
+    
     updateState(){
     }
 

@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const contentful = require('contentful');
 const request = require('request');
 const roles = require('../config/roles');
-const Subscription = require('./model');
-const Notification = require('./model');
+const Subscription  = require('./model');
+const Notification  = require('../notifications/model');
 require('dotenv').config();
 
 exports.ping = (req, res, next) => {
@@ -23,13 +23,14 @@ exports.addSubscription = async (req, res, next) => {
         order: [ [ 'id', 'DESC' ]]})
     
     existing = existing.length > 0 ? existing[0] : [];
+    console.log("EXISTING:", existing)
     if (existing && existing.active){
         res.status(400).send("Already Exists");
     }
     let category = await getCategoryBySlug(categorySlug)
     let code = Math.floor(1000 + Math.random() * 9000);  //4 digit Verification code
 
-    if (!existing){
+    if (existing.length === 0){
         let subscription = Subscription.build({
             phone: validPhone,
             category: category.name,
@@ -88,9 +89,8 @@ exports.triggerNotifications = async (req, res, next) =>{
         where: { categoryId: category.id, active: true }
     });
     subscriptions.forEach( s => {
-        console.log(s.phone, category.name)
         sendNotification(s.phone, category.name);
-        saveNotification(s.phone, article, category);
+        saveNotification(s.phone, id, category);
     })
 
     res.status(200).send(`${subscriptions.length} notifications sent`);
@@ -117,7 +117,6 @@ const getCategoryBySlug = async (slug) => {
                     "fields.slug": slug
                 });
     let result = entries.items[0].fields;
-    console.log(entries.items[0].sys.id);
     let category = {id: entries.items[0].sys.id, name: result.name, slug: slug}
 
     return category
@@ -149,6 +148,7 @@ const sendCode = (phone, code, category) => {
 const saveNotification = (phone, article, category) => {
     let notification = Notification.build({
         phone: phone,
+        articleId: article,
         category: category.name,
         categoryId: category.id,
         categorySlug: category.slug,

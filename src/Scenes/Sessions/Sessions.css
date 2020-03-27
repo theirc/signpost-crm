@@ -63,19 +63,91 @@ h5{
     font-style: italic;
     font-size: 13px;
 }
-.followup{
-    background-color: rgb(187, 159, 36);
+.followUp{
+    background-color: #fce303;
     color: black;
-    height: 20px;
+    height: 21px;
     font-size: 10px;
     width: -moz-fit-content;
     width: fit-content;
-    padding: 2px;
+    padding: 3px 15px;
     right: 83px;
     /* position: absolute; */
     margin-top: 10px;
     border-radius: 6px;
+    float: left;
+}
+.messageSent{
+    background-color: rgb(60, 93, 240);
+    color: white;
+    height: 20px;
+    font-size: 10px;
+    width: -moz-fit-content;
+    width: fit-content;
+    padding: 3px 15px;
+    right: 83px;
+    /* position: absolute; */
+    margin-top: 10px;
+    border-radius: 6px;
+   
 }
 .phoneNumber{
+    color: white;
+}
+.btn-message{
+    font-size: 10px;
+    height: 21px;
+    margin-top: 10px;
+    line-height: 21px;
+    margin-left:20px;
+}
+.footer{
+    display: flex;
+}
+
+.hoverable{
+    z-index: 11;
+    padding: 20px;
+    margin: 10px;
+    background-color: cornsilk;
+    border-radius: 5px;
+}
+.message-status{
+    display: flex;
+}
+.message-status-icon{
+    margin-top: 10px;
+    font-size: 19px;
+    margin-left: 10px;
+}
+.tooltip{
+    visibility: hidden;  
+    opacity: 0;
+    margin-left:10px;
+    margin-top:10px;
+    font-size: 12px;
+    text-transform:capitalize;
+
+}
+.tooltiped:hover + .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0.2s linear 0.33s, opacity 0.5s linear;
+}
+.categories{
+    max-width: 60%;
+    text-align: right;
+}
+.followUpCompleted{
+    height: 21px;
+    font-size: 10px;
+    width: -moz-fit-content;
+    width: fit-content;
+    padding: 3px 15px;
+    right: 83px;
+    margin-top: 10px;
+    border-radius: 6px;
+    float: left;
+    border: 1px #7d7c6c solid;
     color: white;
 }

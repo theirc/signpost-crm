@@ -17,32 +17,22 @@ import customStyles from './customStyles';
 import Sessions from './Sessions';
 
 class CreateSession extends Component {
+    
     state = {
         phone : this.props.match.params.phone ? this.props.match.params.phone : '',
         notes: '',
-        category: '',
-        followup: '',
+        followUp: 0,
         history: [],
         loadingHistory: false,
         userSessions: [],
+        categories: null,
+        categoryList: []
     }
 
     componentDidMount(){
-        console.log("did mount", this.props.match);
+        this.getCategoryList();
         if (this.props.match && this.props.match.params.phone){
-            console.log("Phone", this.props.match.params.phone);
-            api.getSessions(this.props.match.params.phone).then(list => {
-                console.log(list);
-                this.setState({userSessions: list.rows})
-            });
-            fetch(`https://mustard-himalayan-7945.twil.io/get_logs?phone=${this.props.match.params.phone}`)
-            .then((response) => {
-                return response.json()
-            })
-            .then((history) => {
-                this.setState({history: history.result, loadingHistory: false});
-                
-            })
+            this.searchSessions(this.props.match.params.phone);
         }
     }
     handleChange = (e) =>{
@@ -50,57 +40,62 @@ class CreateSession extends Component {
             [e.target.id]: e.target.value
         })
     }
-    handleChangeCategory = (e) => 
+    handleChangeCategory = (e) => {
         this.setState({
-            category: e.value
+            categories: e
         })
+    }
+
+    handleChangeFollowUp = (e) => {
+        this.setState({
+            followUp: e.target.checked
+        })
+    }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        api.saveSession(this.state);
-        const {flex } = this.props;
-
-        this.props.history.push(flex ? "/flex" : "/");
+        const session = this.state;
+        session.userSessions = null;
+        session.history = null;
+        const { flex } = this.props;
+        api.saveSession(session).then(result => this.props.history.push(flex ? "/flex" : "/"));
+        
     }
     updateTaskCount = (count) => {
         this.setState({taskCount : count});
     }
-    // handleSearch = (e) =>{
-    //     ///To do: move this action to API
-    //     e.preventDefault();
-    //     this.setState({loadingHistory : true});
-    //     let phone = this.props.match && this.props.match.phone ? this.props.match.phone : this.state.phone;
-    //     let headers = [
-    //         ['Content-Type', 'application/x-www-form-urlencoded'],
-    //         ['Content-Type', 'multipart/form-data'],
-    //         ['Content-Type', 'text/plain'],
-    //       ];
-    //     if (phone){
-    //         fetch(`https://mustard-himalayan-7945.twil.io/get_logs?phone=${phone}`)
-    //         .then((response) => {
-    //             return response.json()
-    //         })
-    //         .then((history) => {
-    //             this.setState({history: history.result, loadingHistory: false});
-                
-    //         })
-    //     }
-    //     console.log("ges sessions");
-    //     api.getSessions(this.state.phone).then(list => {
-    //         console.log(list);
-    //         this.setState({userSessions: list.rows})
-    //     });
-    // }
+    handleSearch = (e) => {
+        e.preventDefault();
+        this.searchSessions(this.state.phone);
+    }
+
+    searchSessions = (phone) => {
+        api.getSessions(phone).then(list => {
+            this.setState({userSessions: list.rows})
+        });
+        fetch(`https://mustard-himalayan-7945.twil.io/get_logs?phone=${phone}`)
+        .then((response) => {
+            return response.json()
+        })
+        .then((history) => {
+            this.setState({history: history.result, loadingHistory: false});
+            
+        })
+    }
+
+    getCategoryList = () => {
+        api.getCategories().then(list => {
+            this.setState({categoryList : list.rows});
+        })
+    }
 
     render() {
         
         const { user, flex } = this.props;
-        const { phone, loadingHistory, history, category, userSessions, tasks, taskCount } = this.state;
-        const showTaskCount = taskCount && taskCount > 0 ? `(${taskCount})` : '';
-        const categories = [{Category:"Health", value: 1}, {Category: "Women", value: 3}, {Category:"Violence", value: 2 }];
-        const saveDisabled = phone && category ? "": "disabled";
-        const catOptions = categories && categories.map(c => {return {value: c.value, label: c.Category}});
-
+        const { phone, loadingHistory, history, categories, userSessions, tasks, taskCount, categoryList } = this.state;
+        const saveDisabled = phone && categories && categories.length > 0 ? "": "disabled";
+        const catOptions = categoryList && categoryList.map(c => {return {value: c.id, label: c.name}});
+        const showSessions = userSessions != null && userSessions.length > 0 ? true : false;
         if (user && !user.id) return <Redirect to="/signin"/>
         return (
             <div className="createSession">
@@ -123,10 +118,10 @@ class CreateSession extends Component {
                             
                             <div className="input m-t-20">
                                 <label htmlFor="category" className="m-b-20">Category</label>
-                                <Select id="category" styles={customStyles} options={catOptions} onChange={this.handleChangeCategory}/>
+                                <Select id="category" isMulti={true} values={categories} styles={customStyles} options={catOptions} onChange={this.handleChangeCategory}/>
                             </div>
                             <label className="m-t-20">
-                                <input type="checkbox" id="followup" onChange={this.handleChange} />
+                                <input type="checkbox" id="followup" onClick={this.handleChangeFollowUp} />
                                 <span>Needs Follow Up</span>
                             </label>
                             <div className="row m-t-20">
@@ -157,33 +152,12 @@ class CreateSession extends Component {
                     </div>
                     <div className="col s6">
                         <h5>Activity</h5>
-                        <UserSessions sessions={userSessions}/>
+                        {showSessions && userSessions && userSessions.length>0 &&
+                                userSessions.map(s => 
+                                     <UserSessions showFollowUpActions={false} key={s.id} s={s}/>
+                        )}
                     </div>
                 </div>
-                
-                {/* {phone && 
-                <div className="row m-t-50">
-                    <Tabs forceRenderTabPanel={true}>
-                        <TabList>
-                            <Tab>Sessions</Tab>
-                            <Tab>History</Tab>
-                        </TabList>
-                        <TabPanel>
-                            {phone && userSessions && userSessions.length > 0 && 
-                                <div className="col s12"> 
-                                    {<UserSessions sessions={userSessions}/>}
-                                </div> 
-                            }
-                        </TabPanel>
-                        <TabPanel>
-                            {history && history.length > 0 &&
-                                <div className="col s12"> 
-                                    <HistoryList history={history} phone={phone}/>
-                                </div>}
-                        </TabPanel>
-                    </Tabs>
-                </div>
-                } */}
             </div>
         </div>
         )

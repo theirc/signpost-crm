@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
 
-const Task = db.sequalize.define(
+const Task = db.sequelize.define(
         'task', 
         {
             id: {

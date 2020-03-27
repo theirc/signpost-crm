@@ -29,7 +29,7 @@ export const Login = props => {
 
 		setMessage('');
 		setLoading(true);
-		return fetch(config.apiUrl+'/api/auth/login', { headers: composeHeader(), body, method: 'POST' })
+		return fetch('/api/auth/login', { headers: composeHeader(), body, method: 'POST' })
 			.then(res => {
 				if (res.status === 200) return res.json();
 				setMessage(res.statusText);
@@ -39,8 +39,8 @@ export const Login = props => {
 				setLoading(false);
 				if (res) {
 					res.loggedIn = new Date().toString();
-					props.setUser(res.user);
 					props.setToken(res.token);
+					props.setUser(res.user);
 				}else{
 					setMessage('Wrong credentials');
 				}

@@ -28,7 +28,6 @@ exports.getTask = async (req, res, next) =>{
 
 exports.newTask = async (req, res, next) => {
     const { user } = req;
-    console.log(req.user, user);
     Task.build({
         phone: req.body.phone,
         summary: req.body.summary,
@@ -36,7 +35,6 @@ exports.newTask = async (req, res, next) => {
         due_on: req.body.dueDate,
         user: user.id,
     }).save();
-    console.log("user", user.id);
     res.send(true);
 }
 

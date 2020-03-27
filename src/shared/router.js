@@ -23,7 +23,6 @@ const AppRouter = props => {
                         <Route exact path="/phone/:phone" component={CreateSession} />
                         <Route path="/login" component={Login}/>
                         <Route path="/session/create" component={CreateSession}/>
-                        <Route path="/stats" component={Stats}/>
                     </Switch>
                 </div>
             }

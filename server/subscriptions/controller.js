@@ -24,7 +24,7 @@ exports.addSubscription = async (req, res, next) => {
     try{
         existing = await Subscription.findAll({
             limit :1,
-            where: { phone: validPhone, categorySlug: categorySlug, active: false },
+            where: { phone: validPhone, categorySlug: categorySlug},
             order: [ [ 'id', 'DESC' ]]})
     }catch(err){
         res.status(500).send(err);

@@ -16,6 +16,8 @@ exports.addSubscription = async (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     const { phone, categorySlug } = req.body;
     //Validate phone number 
+    console.log("REQUEST:", phone, categorySlug);
+
     let validPhone = validatePhone(phone);
     //Verify there's no previous subscription
     let existing = await Subscription.findAll({
@@ -28,7 +30,8 @@ exports.addSubscription = async (req, res, next) => {
     if (existing && existing.active){
         res.status(400).send("Already Exists");
     }
-    let category = await getCategoryBySlug(categorySlug)
+    let category = await getCategoryBySlug(categorySlug);
+    console.log("CATEGORY FETCH:", category);
     let code = Math.floor(1000 + Math.random() * 9000);  //4 digit Verification code
 
     if (existing.length === 0){
@@ -136,7 +139,7 @@ const getArticleCategorybyId = async (articleId) => {
 }
 
 const sendCode = (phone, code, category) => {
-    res.header("Access-Control-Allow-Origin", "*");
+
     //Send template with Code
     let msg = `Hemos recibido su solicitud para subscribirse a las notificaciones de la categoría _*${category}*_. Su código de confirmación es *${code}*.`;
     const accountSid = process.env.TWILIO_SID;

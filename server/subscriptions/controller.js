@@ -117,7 +117,9 @@ exports.triggerNotifications = async (req, res, next) =>{
 
 exports.lookUpNotifications = async(req, res, nect) => {
     res.header("Access-Control-Allow-Origin", "*");
-    const { phone } = req.body;
+    let { phone } = req.body;
+    phone = phone.replace("whatsapp:+", "");
+    console.err(phone);
     let result = await Notification.findAll({
         limit :1,
             where: { phone: phone, status: "sent"},
@@ -127,9 +129,9 @@ exports.lookUpNotifications = async(req, res, nect) => {
         let article = await getArticleById(articleId);
         console.log(article);
         let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/`;
-        res.send(text);
+        res.status(200).send(text);
     }else{
-        res.send("NO");
+        res.status(400).send("NO");
     }
 }
 

@@ -15,6 +15,9 @@ const Notifications = db.sequelize.define(
         categoryId: {
             type: Sequelize.STRING
         },
+        categorySlug: {
+            type: Sequelize.STRING
+        },
         articleId:{
             type: Sequelize.STRING
         },

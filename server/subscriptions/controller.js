@@ -129,12 +129,12 @@ exports.lookUpNotifications = async(req, res, nect) => {
         let article = await getArticleById(articleId);
         console.log(article);
         let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/`;
+        res.status(200).send(text);
         Notification.update({
             status: "done",
             },
             {where: { id: result[0].id }}
         )
-        res.status(200).send(text);
     }else{
         res.status(400).send("NO");
     }

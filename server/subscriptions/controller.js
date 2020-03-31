@@ -16,14 +16,20 @@ exports.addSubscription = async (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     const { phone, categorySlug } = req.body;
     //Validate phone number 
-    console.log("REQUEST:", phone, categorySlug);
+    console.error("REQUEST:", phone, categorySlug);
 
     let validPhone = validatePhone(phone);
     //Verify there's no previous subscription
-    let existing = await Subscription.findAll({
-        limit :1,
-        where: { phone: validPhone, categorySlug: categorySlug, active: false },
-        order: [ [ 'id', 'DESC' ]]})
+    let existing;
+    try{
+        existing = await Subscription.findAll({
+            limit :1,
+            where: { phone: validPhone, categorySlug: categorySlug, active: false },
+            order: [ [ 'id', 'DESC' ]]})
+    }catch(err){
+        res.status(500).send(err);
+    }
+    
     
     existing = existing.length > 0 ? existing[0] : [];
     console.log("EXISTING:", existing)
@@ -57,7 +63,7 @@ exports.addSubscription = async (req, res, next) => {
         sendCode(validPhone, code, category.name);
         res.status(200).send("OK");
     }catch(err){
-        res.status(500).send("Error", err);
+        res.status(500).send(err);
     }
     
     

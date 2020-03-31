@@ -21,7 +21,7 @@ const Notifications = db.sequelize.define(
         status: {
             type: Sequelize.STRING
         },
-        readtTime: {
+        readTime: {
             type: Sequelize.DATE
         }
     }

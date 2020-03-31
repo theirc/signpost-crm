@@ -8,4 +8,5 @@ router.route('/ping').post(controller.ping);
 router.route('/add-subscription').post(controller.addSubscription);
 router.route('/verify-code').post(controller.verifyCode);
 router.route('/trigger-notifications').post(controller.triggerNotifications);
+router.route('/lookup-notifications').post(controller.lookUpNotifications);
 module.exports = router;

@@ -115,6 +115,33 @@ exports.triggerNotifications = async (req, res, next) =>{
     res.status(200).send(`${subscriptions.length} notifications sent`);
 }
 
+exports.lookUpNotifications = async(req, res, nect) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    const { phone } = req.body;
+    let result = await Notification.findAll({
+        limit :1,
+            where: { phone: phone, status: "sent"},
+            order: [ [ 'id', 'DESC' ]]})
+    if (result.length > 0){
+        let articleId = result[0].articleId;
+        let article = await getArticleById(articleId);
+        console.log(article);
+        let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/`;
+        res.send(text);
+    }else{
+        res.send("NO");
+    }
+}
+
+const getArticleById = async (id) =>{
+    const client =  contentful.createClient({
+        space: "e17qk44d7f2w",
+        accessToken: process.env.CONTENTFUL_KEY 
+    })
+    let entry = await client.getEntry(id);
+    return {title: entry.fields.title, lead: entry.fields.lead, content: entry.fields.content, country: entry.fields.country.fields.slug};
+}
+
 const getCategoryById = async (id) => {
     const client =  contentful.createClient({
         space: "e17qk44d7f2w",
@@ -173,7 +200,7 @@ const saveNotification = (phone, article, category) => {
         categoryId: category.id,
         categorySlug: category.slug,
         active: false,
-        status: 'queued'
+        status: 'sent'
     })
     notification.save();
 }

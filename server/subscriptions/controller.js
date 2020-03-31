@@ -32,39 +32,40 @@ exports.addSubscription = async (req, res, next) => {
     
     
     existing = existing.length > 0 ? existing[0] : [];
-    console.log("EXISTING:", existing)
+    console.error("EXISTING:", existing)
     if (existing && existing.active){
         res.status(400).send("Already Exists");
-    }
-    let category = await getCategoryBySlug(categorySlug);
-    console.log("CATEGORY FETCH:", category);
-    let code = Math.floor(1000 + Math.random() * 9000);  //4 digit Verification code
-
-    if (existing.length === 0){
-        let subscription = Subscription.build({
-            phone: validPhone,
-            category: category.name,
-            categoryId: category.id,
-            categorySlug: categorySlug,
-            code: code,
-            active: false,
-        })
-        await subscription.save();
     }else{
-        await Subscription.update(
-            { 
-              code: code,
-            },
-            { where: {id: existing.id}}
-        )
-        console.log("Already exist inactive")
+        let category = await getCategoryBySlug(categorySlug);
+        let code = Math.floor(1000 + Math.random() * 9000);  //4 digit Verification code
+
+        if (existing.length === 0){
+            let subscription = Subscription.build({
+                phone: validPhone,
+                category: category.name,
+                categoryId: category.id,
+                categorySlug: categorySlug,
+                code: code,
+                active: false,
+            })
+            await subscription.save();
+        }else{
+            await Subscription.update(
+                { 
+                code: code,
+                },
+                { where: {id: existing.id}}
+            )
+            console.log("Already exist inactive")
+        }
+        try{
+            sendCode(validPhone, code, category.name);
+            res.status(200).send("OK");
+        }catch(err){
+            res.status(500).send(err);
+        }
     }
-    try{
-        sendCode(validPhone, code, category.name);
-        res.status(200).send("OK");
-    }catch(err){
-        res.status(500).send(err);
-    }
+    
     
     
 };

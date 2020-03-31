@@ -13,6 +13,7 @@ exports.ping = (req, res, next) => {
 Add a new inactive subscription into the Database. Send a verification code to phone number.
 */
 exports.addSubscription = async (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
     const { phone, categorySlug } = req.body;
     //Validate phone number 
     let validPhone = validatePhone(phone);
@@ -58,6 +59,7 @@ Send a whatsapp message using a template to verify the phone number
 */
 
 exports.verifyCode = async (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
     const { phone, code } = req.body;
     let validPhone = validatePhone(phone);
     let existingSubscription = await  Subscription.count({
@@ -80,6 +82,7 @@ exports.verifyCode = async (req, res, next) => {
 }
 
 exports.triggerNotifications = async (req, res, next) =>{
+    res.header("Access-Control-Allow-Origin", "*");
     const { sys } = req.body;
     const{ id } = sys;
     let article = await getArticleCategorybyId(id);
@@ -133,6 +136,7 @@ const getArticleCategorybyId = async (articleId) => {
 }
 
 const sendCode = (phone, code, category) => {
+    res.header("Access-Control-Allow-Origin", "*");
     //Send template with Code
     let msg = `Hemos recibido su solicitud para subscribirse a las notificaciones de la categoría _*${category}*_. Su código de confirmación es *${code}*.`;
     const accountSid = process.env.TWILIO_SID;

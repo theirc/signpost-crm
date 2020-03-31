@@ -24,10 +24,10 @@ app.use(express.static('build'));
 
 
 app.use(function(req, res, next) {
-  //res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-  res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER); 
+  //res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER); 
   next();
 });
 
@@ -37,7 +37,7 @@ app.use("/chatnumbers", getChatNumbers);
 
 app.get('/api/ping', function (req, res) {
   console.log("pong");
-  return res.send('pong'+process.env.API_URL+" "+process.env.JWT_SECRET); 
+  return res.send('pong'); 
 });
 
 

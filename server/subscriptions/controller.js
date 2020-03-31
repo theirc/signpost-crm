@@ -119,7 +119,7 @@ exports.lookUpNotifications = async(req, res, nect) => {
     res.header("Access-Control-Allow-Origin", "*");
     let { phone } = req.body;
     phone = phone.replace("whatsapp:+", "");
-    console.err(phone);
+    console.error(phone);
     let result = await Notification.findAll({
         limit :1,
             where: { phone: phone, status: "sent"},

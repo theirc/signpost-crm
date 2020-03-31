@@ -53,8 +53,14 @@ exports.addSubscription = async (req, res, next) => {
         )
         console.log("Already exist inactive")
     }
-    sendCode(validPhone, code, category.name);
-    res.status(200).send("OK");
+    try{
+        sendCode(validPhone, code, category.name);
+        res.status(200).send("OK");
+    }catch(err){
+        res.status(500).send("Error", err);
+    }
+    
+    
 };
 
 /*

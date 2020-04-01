@@ -60,7 +60,7 @@ exports.addSubscription = async (req, res, next) => {
         }
         try{
             sendCode(validPhone, code, category.name);
-            res.status(200).send("OK");
+            res.status(200).send({code: code, message: "OK"});
         }catch(err){
             res.status(500).send(err);
         }

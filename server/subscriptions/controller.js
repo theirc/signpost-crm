@@ -128,7 +128,7 @@ exports.lookUpNotifications = async(req, res, nect) => {
         let articleId = result[0].articleId;
         let article = await getArticleById(articleId);
         console.log(article);
-        let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/`;
+        let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
         res.status(200).send(text);
         Notification.update({
             status: "done",
@@ -146,7 +146,7 @@ const getArticleById = async (id) =>{
         accessToken: process.env.CONTENTFUL_KEY 
     })
     let entry = await client.getEntry(id);
-    return {title: entry.fields.title, lead: entry.fields.lead, content: entry.fields.content, country: entry.fields.country.fields.slug};
+    return {title: entry.fields.title, lead: entry.fields.lead, content: entry.fields.content, country: entry.fields.country.fields.slug, slug: entry.fields.slug};
 }
 
 const getCategoryById = async (id) => {

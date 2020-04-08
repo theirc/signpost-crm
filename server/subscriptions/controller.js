@@ -32,7 +32,7 @@ exports.addSubscription = async (req, res, next) => {
     
     existingSubscription = existing.length > 0 ? existing[0] : [];
     console.error("EXISTING:", existing)
-    if (existing && existing.active){
+    if (existingSubscription && existingSubscription.active){
         res.status(400).send("Already Exists and active subcription for this Phone number and Category");
     }else{
         let category = await getCategoryBySlug(categorySlug);
@@ -77,9 +77,15 @@ exports.verifyCode = async (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     const { phone, code } = req.body;
     let validPhone = validatePhone(phone);
-    let existingSubscription = await  Subscription.count({
-        where: { phone: validPhone, code: code }
-    })
+    let existingSubscription;
+    try{
+        existingSubscription = await  Subscription.count({
+            where: { phone: validPhone, code: code }
+        })
+    }catch(err){
+        res.status(500).send(err);
+        return 
+    }
 
     if (existingSubscription > 0){
         Subscription.update(

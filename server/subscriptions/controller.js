@@ -87,15 +87,20 @@ exports.verifyCode = async (req, res, next) => {
         return 
     }
 
-    if (existingSubscription > 0){
-        Subscription.update(
-            {
-                active: true
-            },
-            { where: {phone: validPhone, code :code}}
-        )
-        res.status(200);
-        res.send("OK");
+    if (existingubscription > 0){
+        try{
+            Subscription.update(
+                {
+                    active: true
+                },
+                { where: {phone: validPhone, code :code}}
+            )
+            res.status(200);
+            res.send("OK");
+        }catch(err){
+            res.status(500).send(err);
+        }
+        
     }else{
         res.status(400);
         res.send("Invalid phone or code");

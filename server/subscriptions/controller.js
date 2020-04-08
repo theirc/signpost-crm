@@ -30,11 +30,10 @@ exports.addSubscription = async (req, res, next) => {
         res.status(500).send(err);
     }
     
-    
-    existing = existing.length > 0 ? existing[0] : [];
+    existingSubscription = existing.length > 0 ? existing[0] : [];
     console.error("EXISTING:", existing)
     if (existing && existing.active){
-        res.status(400).send("Already Exists");
+        res.status(400).send("Already Exists and active subcription for this Phone number and Category");
     }else{
         let category = await getCategoryBySlug(categorySlug);
         let code = Math.floor(1000 + Math.random() * 9000);  //4 digit Verification code
@@ -54,7 +53,7 @@ exports.addSubscription = async (req, res, next) => {
                 { 
                 code: code,
                 },
-                { where: {id: existing.id}}
+                { where: {id: existingSubscription.id}}
             )
             console.log("Already exist inactive")
         }

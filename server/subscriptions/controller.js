@@ -79,6 +79,8 @@ exports.verifyCode = async (req, res, next) => {
     let validPhone = validatePhone(phone);
     let existingSubscription;
     try{
+        console.log(phone, validPhone);
+
         existingSubscription = await  Subscription.count({
             where: { phone: validPhone, code: code }
         })
@@ -86,8 +88,8 @@ exports.verifyCode = async (req, res, next) => {
         res.status(500).send(err);
         return 
     }
-
-    if (existingubscription > 0){
+    console.log(existingSubscription);
+    if (existingSubscription > 0){
         try{
             Subscription.update(
                 {
@@ -235,5 +237,5 @@ const sendNotification = (phone, category) => {
 }
 
 const validatePhone = (phone) => {
-    return phone.replace("+", "").replace("(" ,"").replace(")", "").replace(" ", "").replace("-", "");
+    return phone && phone.replace("+", "").replace("(" ,"").replace(")", "").replace(" ", "").replace("-", "");
 }

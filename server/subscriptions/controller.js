@@ -128,26 +128,30 @@ exports.triggerNotifications = async (req, res, next) =>{
 
 exports.lookUpNotifications = async(req, res, nect) => {
     res.header("Access-Control-Allow-Origin", "*");
-    let { phone } = req.body;
-    phone = phone.replace("whatsapp:+", "");
-    console.error(phone);
-    let result = await Notification.findAll({
-        limit :1,
-            where: { phone: phone, status: "sent"},
-            order: [ [ 'id', 'DESC' ]]})
-    if (result.length > 0){
-        let articleId = result[0].articleId;
-        let article = await getArticleById(articleId);
-        console.log(article);
-        let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
-        res.status(200).send(text);
-        Notification.update({
-            status: "done",
-            },
-            {where: { id: result[0].id }}
-        )
+    let { phone, message } = req.body;
+    if (message && message.trim().toLowerCase() == "info"){
+        phone = phone.replace("whatsapp:+", "");
+        console.error(phone);
+        let result = await Notification.findAll({
+            limit :1,
+                where: { phone: phone, status: "sent"},
+                order: [ [ 'id', 'DESC' ]]})
+        if (result.length > 0){
+            let articleId = result[0].articleId;
+            let article = await getArticleById(articleId);
+            console.log(article);
+            let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
+            Notification.update({
+                status: "done",
+                },
+                {where: { id: result[0].id }}
+            )
+            res.status(200).send(text);
+        }else{
+            res.status(400).send("NO");
+        }
     }else{
-        res.status(400).send("NO");
+        res.status(200).send("NO");
     }
 }
 

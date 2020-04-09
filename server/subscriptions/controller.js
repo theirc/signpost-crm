@@ -102,7 +102,6 @@ exports.verifyCode = async (req, res, next) => {
         }catch(err){
             res.status(500).send(err);
         }
-        
     }else{
         res.status(400);
         res.send("Invalid phone or code");

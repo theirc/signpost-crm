@@ -133,7 +133,7 @@ exports.lookUpNotifications = async(req, res, next) => {
         phone = phone.replace("whatsapp:+", "");
         console.error(phone);
         let result = await Notification.findAll({
-            limit :1,
+
                 where: { phone: phone, status: "sent"},
                 order: [ [ 'id', 'DESC' ]]})
         if (result.length > 0){
@@ -159,6 +159,12 @@ exports.lookUpNotifications = async(req, res, next) => {
     }
 }
 
+exports.subscriptionList = async (req, res, next) =>{
+    let list = await Subscription.findAll();
+    res.send(list);
+    
+}
+
 exports.stopSubscription = async(req, res, next) => {
     const { phone } = req.body;
     let validPhone = validatePhone(phone);
@@ -168,7 +174,6 @@ exports.stopSubscription = async(req, res, next) => {
     let existing;
     try{
         existing = await Subscription.findAll({
-            limit :1,
             where: { phone: validPhone, active: true }
         })
     }catch(err){

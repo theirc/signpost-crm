@@ -126,7 +126,7 @@ exports.triggerNotifications = async (req, res, next) =>{
     res.status(200).send(`${subscriptions.length} notifications sent`);
 }
 
-exports.lookUpNotifications = async(req, res, nect) => {
+exports.lookUpNotifications = async(req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     let { phone, message } = req.body;
     if (message && message.trim().toLowerCase() == "info"){
@@ -141,18 +141,52 @@ exports.lookUpNotifications = async(req, res, nect) => {
             let article = await getArticleById(articleId);
             console.log(article);
             let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
-            Notification.update({
-                status: "done",
-                },
-                {where: { id: result[0].id }}
-            )
+            try{
+                Notification.update({
+                    status: "done",
+                    },
+                    {where: { id: result[0].id }}
+                )
+            }catch(err){
+                res.status(500).send("NO");
+            }
             res.status(200).send(text);
         }else{
-            res.status(400).send("NO");
+            res.status(404).send("NO");
         }
     }else{
         res.status(200).send("NO");
     }
+}
+
+exports.stopSubscription = async(req, res, next) => {
+    const { phone } = req.body;
+    let validPhone = validatePhone(phone);
+
+    let existing;
+    try{
+        existing = await Subscription.findAll({
+            limit :1,
+            where: { phone: validPhone, active: true }
+        })
+    }catch(err){
+        console.log(err);
+        res.status(500).send(err);
+        return
+    }
+    if (existing && existing.length > 0){
+        Subscription.update(
+            { 
+            active: false,
+            },
+            { where: {phone: validPhone}}
+        )
+        res.status(200).send("Canceled");
+    }else{
+        res.status(404).send("Not found");
+    }
+    return
+
 }
 
 const getArticleById = async (id) =>{

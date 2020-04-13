@@ -162,7 +162,9 @@ exports.lookUpNotifications = async(req, res, next) => {
 exports.stopSubscription = async(req, res, next) => {
     const { phone } = req.body;
     let validPhone = validatePhone(phone);
-
+    if (validPhone.indexOf("whatsapp") > -1 ){
+        validPhone = validPhone.split(":")[1];
+    }
     let existing;
     try{
         existing = await Subscription.findAll({

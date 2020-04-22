@@ -15,7 +15,7 @@ const api = {
             .then(
                 r => {
                     if (r.status != 200) return resolve(null);
-                    r.json()
+                    return r.json()
                 }
                 )
             .then(list => {
@@ -30,8 +30,11 @@ const api = {
         return new Promise((resolve, reject) => {
             let headers = composeHeader(login.token);
             fetch(url, {method: 'GET', headers: headers})
-            .then(r => 
-                r.json()
+            .then(r => {
+                if (r.status != 200) return resolve(null);
+                return r.json();
+            }
+
             )
             .then(list => {
                 resolve(list);

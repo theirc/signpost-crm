@@ -9,35 +9,17 @@ function verifyToken(req, res, next){
         req.token = bearerHeader;
         jwt.verify(bearerHeader, process.env.JWT_SECRET, (err, authData) => {
             if(err){
-                res.json(err);
+                res.status(403).json(err);
             }else{
                 req.user = authData.user;
                 next();
             }
         })
     }else{
-        res.sendStatus(403);
+        res.status(403).send("Invalid token");
     }
      
 }
 
-function verifyAPIToken(req, res, next){
-    const bearerHeader = req.headers['authorization'];
-    if (typeof bearerHeader !== 'undefined'){
-       
-        req.token = bearerHeader;
-        jwt.verify(bearerHeader, process.env.JWT_SECRET, (err, authData) => {
-            if(err){
-                res.json(err);
-            }else{
-                req.user = authData.user;
-                next();
-            }
-        })
-    }else{
-        res.sendStatus(403);
-    }     
-}
 
   module.exports = verifyToken
-  module.exports = verifyAPIToken;

@@ -34,7 +34,7 @@ exports.login = async (req, res, next) => {
             }else{
                 return res.send(false);
             }
-        })
+        }).catch(err => res.status(500).send(err))
     } catch (error) {
         return next(error);
     }

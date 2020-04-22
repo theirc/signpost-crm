@@ -3,6 +3,7 @@ import api from './api';
 import actions from './actions';
 import moment from 'moment';
 import UserSessions from './UserSessions';
+import { Redirect } from 'react-router-dom';
 
 class Sessions extends Component{
     constructor( props ){
@@ -12,7 +13,8 @@ class Sessions extends Component{
     state = {
         sessions : [],
         loading: false,
-        showSendMessage: false
+        showSendMessage: false,
+        redirect :false
     }
 
     componentDidMount(){
@@ -20,12 +22,18 @@ class Sessions extends Component{
     }
     getSessionList(){
         api.getSessions().then(list => {
-            this.setState( {sessions: list.rows})
+            if (list == null){
+                this.setState({redirect: true, sessions:[]})
+            }else{
+                this.setState( {sessions: list.rows})
+            }
         })
     }
 
     render(){
         const { sessions } = this.state;
+        if (this.state.redirect) return <Redirect to="/login"/>
+
         return (
             <div>
             <h3>Chat Sessions</h3>

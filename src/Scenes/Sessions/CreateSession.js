@@ -15,6 +15,7 @@ import Navbar from '../../components/layouts/Navbar';
 import './Sessions.css';
 import customStyles from './customStyles';
 import Sessions from './Sessions';
+import { TaskChannelInstance } from 'twilio/lib/rest/taskrouter/v1/workspace/taskChannel';
 
 class CreateSession extends Component {
     
@@ -26,7 +27,8 @@ class CreateSession extends Component {
         loadingHistory: false,
         userSessions: [],
         categories: null,
-        categoryList: []
+        categoryList: [],
+        redirect: false,
     }
 
     componentDidMount(){
@@ -71,7 +73,13 @@ class CreateSession extends Component {
 
     searchSessions = (phone) => {
         api.getSessions(phone).then(list => {
-            this.setState({userSessions: list.rows})
+            console.log(list);
+            if (list == null){
+                this.setState({redirect: true, userSessions: []});
+            }else{
+                this.setState({userSessions: list.rows})
+            }
+            
         });
         fetch(`https://mustard-himalayan-7945.twil.io/get_logs?phone=${phone}`)
         .then((response) => {
@@ -85,7 +93,12 @@ class CreateSession extends Component {
 
     getCategoryList = () => {
         api.getCategories().then(list => {
-            this.setState({categoryList : list.rows});
+            if (list == null){
+                this.setState({ redirect: true, categoryList: []});
+            } else{
+                this.setState({categoryList : list.rows});
+            }
+            
         })
     }
 
@@ -96,7 +109,7 @@ class CreateSession extends Component {
         const saveDisabled = phone && categories && categories.length > 0 ? "": "disabled";
         const catOptions = categoryList && categoryList.map(c => {return {value: c.id, label: c.name}});
         const showSessions = userSessions != null && userSessions.length > 0 ? true : false;
-        if (user && !user.id) return <Redirect to="/signin"/>
+        if ((user && !user.id) || this.state.redirect) return <Redirect to="/login"/>
         return (
             <div className="createSession">
             {!flex &&  <Navbar user={user}/>}

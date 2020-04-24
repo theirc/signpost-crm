@@ -1,14 +1,12 @@
 //const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const services = require('./services');
-const { getUser } = services;
+const { getUser, getList } = services;
 const request = require('request');
 const User = require('./model');
 require('dotenv').config();
 
 exports.login = async (req, res, next) => {
-    
-
     var token = {};
     try {
         User.findOne({where: {username: req.body.username}, limit: 1})
@@ -40,3 +38,8 @@ exports.login = async (req, res, next) => {
     }
   };
 
+  exports.getUserList = async (req, res, next) => {
+      const { instance } = req.body;
+      let list = await getList(instance);
+      res.send(list);
+  }

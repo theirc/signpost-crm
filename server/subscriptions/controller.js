@@ -134,6 +134,8 @@ exports.triggerNotifications = async (req, res, next) =>{
 exports.lookUpNotifications = async(req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     let { phone, message } = req.body;
+    console.log("***** Phone: ", phone)
+    console.log("***** Message: ", message)
     if (message && message.trim().toLowerCase() == "info"){
         phone = phone.replace("whatsapp:+", "");
         console.error(phone);

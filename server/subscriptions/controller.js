@@ -9,6 +9,11 @@ require('dotenv').config();
 exports.ping = (req, res, next) => {
     res.send("pong");
 }
+
+exports.list = async (req, res, next) => {
+    let list = await Subscription.findAll({order: [['createdAt', 'DESC']]})
+    res.send(list);
+}
 /*
 Add a new inactive subscription into the Database. Send a verification code to phone number.
 */

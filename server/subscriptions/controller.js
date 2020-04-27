@@ -134,8 +134,10 @@ exports.triggerNotifications = async (req, res, next) =>{
 exports.lookUpNotifications = async(req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     let { phone, message } = req.body;
-    console.log("***** Phone: ", phone)
-    console.log("***** Message: ", message)
+    console.log("\n***** Phone: ", phone)
+    console.log("\n***** Message: ", message)
+    console.log("\n***** Lower case message: ", message.trim().toLowerCase());
+    console.log("\n***** Phone number:", phone.replace("whatsapp:+", ""));
     if (message && message.trim().toLowerCase() == "info"){
         phone = phone.replace("whatsapp:+", "");
         console.error(phone);
@@ -155,14 +157,14 @@ exports.lookUpNotifications = async(req, res, next) => {
                     {where: { id: result[0].id }}
                 )
             }catch(err){
-                res.status(500).send("NO");
+                res.status(500).send("Error getting article");
             }
             res.status(200).send(text);
         }else{
-            res.status(404).send("NO");
+            res.status(404).send("No notifications found for this number");
         }
     }else{
-        res.status(404).send("NO");
+        res.status(404).send("No 'info' message:"+message);
     }
 }
 

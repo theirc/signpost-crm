@@ -162,7 +162,7 @@ exports.lookUpNotifications = async(req, res, next) => {
             res.status(404).send("NO");
         }
     }else{
-        res.status(200).send("NO");
+        res.status(404).send("NO");
     }
 }
 

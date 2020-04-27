@@ -21,7 +21,7 @@ const AppRouter = props => {
                         <Route exact path="/" component={Home} />
                         <Route exact path="/flex/phone/:phone" render={(props) => <CreateSession {...props} flex={true}/>}/>
                         <Route exact path="/phone/:phone" component={CreateSession} />
-                        <Route path="/login" component={Login}/>
+                        {/* <Route path="/login" component={Login}/> */}
                         <Route path="/session/create" component={CreateSession}/>
                     </Switch>
                 </div>

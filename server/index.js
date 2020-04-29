@@ -35,7 +35,7 @@ app.use('/api', routes);
 
 app.use("/chatnumbers", getChatNumbers);
 
-// init cron job
+// init cron job, check out https://crontab.guru/#*/15_*_*_*_*
 initCronJob();
 
 app.get('/api/ping', function (req, res) {

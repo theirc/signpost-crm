@@ -35,6 +35,9 @@ app.use('/api', routes);
 
 app.use("/chatnumbers", getChatNumbers);
 
+// init cron job
+initCronJob();
+
 app.get('/api/ping', function (req, res) {
   console.log("pong");
   return res.send('pong'); 
@@ -71,6 +74,12 @@ function verifyToken(req, res, next){
       res.sendStatus(403);
   }
 }
+
+function initCronJob() {
+	var CronJob = require('cron').CronJob;
+	var job = new CronJob('*/15 * * * * *', () => console.log(`cron at ${new Date().toLocaleTimeString()}`));
+	job.start();
+};
 
 
 function getChatNumbers(req, res){

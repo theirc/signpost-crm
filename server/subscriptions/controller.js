@@ -149,7 +149,7 @@ exports.lookUpNotifications = async(req, res, next) => {
             let articleId = result[0].articleId;
             let article = await getArticleById(articleId);
             console.log(article);
-            let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
+            let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://www.cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
             try{
                 Notification.update({
                     status: "done",

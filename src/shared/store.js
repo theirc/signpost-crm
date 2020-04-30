@@ -16,14 +16,14 @@ let initialState = {
 };
 const persist = state => {
 	try {
-		localStorage.setItem('state', JSON.stringify(state));
+		sessionStorage.setItem('state', JSON.stringify(state));
 	} catch(e) {
 		console.log(e);
   }
 }
 const load = () => {
 	try {
-		const serializedState = localStorage.getItem('state');
+		const serializedState = sessionStorage.getItem('state');
 
 		if(serializedState) {
 			let state = JSON.parse(serializedState);

@@ -59,15 +59,6 @@ exports.newSession = async (req, res, next) => {
     )
 }
 
-exports.updateSession = async (req, res, next) =>{
-
-}
-
-exports.deleteSession = async (req, res, next) =>{
-
-}
-
-
 exports.sendMessage = async (req, res, next) => {
     // Send message and remove Follow-Up Flag
     const { id, phone } = req.body;
@@ -81,12 +72,31 @@ exports.sendMessage = async (req, res, next) => {
         from: 'whatsapp:+15184130994',
         to: `whatsapp:+${phone}`,
     }).then(m => {
-        console.log("message", m);
         (async function UpdateFlag(){
-            console.log("updating flag");
             const result = await updateFlag(id, m.sid, m.status);
-            console.log("flag updated");
-            console.log("sending res");
+            res.json({status: m.status, sid: m.sid})
+        })();
+    }).catch((error) => {
+        res.json(error);
+    });
+      
+}
+
+exports.sendMessageMessenger = async (req, res, next) => {
+    // Send message and remove Follow-Up Flag
+    const { id, phone, text } = req.body;
+    console.log(id, phone, text);
+    
+    const accountSid = process.env.TWILIO_SID;
+    const authToken = process.env.TWILIO_TOKEN;
+    const client = require('twilio')(accountSid, authToken);
+    client.messages.create({
+        body: text,
+        from: 'Messenger:2039927102928299',
+        to: `Messenger:${phone}`,
+    }).then(m => {
+        (async function UpdateFlag(){
+            const result = await updateFlag(id, m.sid, m.status);
             res.json({status: m.status, sid: m.sid})
         })();
     }).catch((error) => {
@@ -139,13 +149,11 @@ async function updateFlag(id, sid, status){
         },
         { where: {id: id}}
     ).then(r => {
-        console.log("update flag completed");
         return r;
     })
     .catch(function(err) {
         return err
     })
-    console.log("Finish update")
 }
 
 async function updateStatus(id, status){

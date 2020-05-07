@@ -60,7 +60,6 @@ exports.addSubscription = async (req, res, next) => {
                 },
                 { where: {id: existingSubscription.id}}
             )
-            console.log("Already exist inactive")
         }
         try{
             sendCode(validPhone, code, category.name);
@@ -84,7 +83,6 @@ exports.verifyCode = async (req, res, next) => {
     let validPhone = validatePhone(phone);
     let existingSubscription;
     try{
-        console.log(phone, validPhone);
 
         existingSubscription = await  Subscription.count({
             where: { phone: validPhone, code: code }
@@ -93,7 +91,6 @@ exports.verifyCode = async (req, res, next) => {
         res.status(500).send(err);
         return 
     }
-    console.log(existingSubscription);
     if (existingSubscription > 0){
         try{
             Subscription.update(
@@ -134,10 +131,6 @@ exports.triggerNotifications = async (req, res, next) =>{
 exports.lookUpNotifications = async(req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     let { phone, message } = req.body;
-    console.log("\n***** Phone: ", phone)
-    console.log("\n***** Message: ", message)
-    console.log("\n***** Lower case message: ", message.trim().toLowerCase());
-    console.log("\n***** Phone number:", phone.replace("whatsapp:+", ""));
     if (message && message.trim().toLowerCase() == "info"){
         phone = phone.replace("whatsapp:+", "");
         console.error(phone);
@@ -148,7 +141,6 @@ exports.lookUpNotifications = async(req, res, next) => {
         if (result.length > 0){
             let articleId = result[0].articleId;
             let article = await getArticleById(articleId);
-            console.log(article);
             let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://www.cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
             try{
                 Notification.update({

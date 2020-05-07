@@ -39,19 +39,16 @@ app.use("/chatnumbers", getChatNumbers);
 initCronJob();
 
 app.get('/api/ping', function (req, res) {
-  console.log("pong");
   return res.send('pong'); 
 });
 
 
 app.get('/', function (req, res) {
-  console.log("*** / ***");
   res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER); // update to match the domain you will make the request from
   res.header('Cache-Control', 'no-cache');
   res.sendFile(path.join(path.dirname(__dirname), 'build', 'index.html'));
 });
 app.get('*', function (req, res) {
-  console.log("*** / ***");
   res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER); // update to match the domain you will make the request from
   res.header('Cache-Control', 'no-cache');
   res.sendFile(path.join(path.dirname(__dirname), 'build', 'index.html'));

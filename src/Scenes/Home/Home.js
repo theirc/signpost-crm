@@ -7,8 +7,6 @@ const Home = props => {
     
     const { auth, phone, flex } = props;
     if (auth && !auth.uid) return <Redirect to="/login"/>
-    // if ( phone ) return <Redirect to="/session/create/"/>
-
     return(
         <div>
             <Navbar flex={flex}/>

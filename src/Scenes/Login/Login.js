@@ -25,7 +25,6 @@ export const Login = props => {
 	};
 
 	useEffect(() => {
-		console.log("user",props.user);
 	}, [user])
 
 	const login = (user, pass) => {
@@ -42,28 +41,19 @@ export const Login = props => {
 			.then(res => {
 				setLoading(false);
 				if (res) {
-					console.log(res.user);
 					res.loggedIn = new Date().toString();
 					props.setToken(res.token);
 					props.setUser(res.user);
-					console.log("setUser", props.user);
 				}else{
 					setMessage('Wrong credentials');
 				}
 			})
 			.catch(err => {
 				setLoading(false);
-				console.log(err);
 				err.status === undefined && setMessage('Endpoint unreachable');
 			});
 	};
-	// console.log(props);
-	// if (props.user && props.user.name) {
-	// 	console.log("user:", props.user)
-	// 	return <Redirect to="/"/>
-	// }else{
-	// 	console.log("no user", user);
-	// }
+	
 	return (
 		
 		<div className={"container "+NS}>

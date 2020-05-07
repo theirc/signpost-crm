@@ -73,7 +73,6 @@ class CreateSession extends Component {
 
     searchSessions = (phone) => {
         api.getSessions(phone).then(list => {
-            console.log(list);
             if (list == null){
                 this.setState({redirect: true, userSessions: []});
             }else{

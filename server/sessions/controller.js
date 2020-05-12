@@ -1,7 +1,7 @@
 //const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const services = require('./services');
-const { getList } = services;
+const { getList, getCategoriesStats } = services;
 const request = require('request');
 const roles = require('../config/roles');
 const Session = require('./model');
@@ -50,10 +50,15 @@ exports.newSession = async (req, res, next) => {
     })
     session.save()
     .then((session) => {
-        session.addCategory(catList);
-        session.save().then((session) =>
-            res.send(session)
-        )
+        session.save().then((session) =>{
+            session.addCategory(catList);
+            //Save again after add category to get the record updated before the stats lookup
+            session.save().then(async (s) => {
+                getCategoriesStats();
+                res.send(s)
+            })
+            
+        })
         .catch((err) => res.send(err));;
     }
     )

@@ -60,7 +60,7 @@ export const Login = props => {
 			<h3>Login</h3>
 			<Form onSubmit={onSubmit}>
 				<Form.Group controlId='formBasicEmail'>
-					<Form.Label>User</Form.Label>
+					<Form.Label>Usuario</Form.Label>
 					<Form.Control type='email' placeholder='Enter email' onChange={e => setUser(e.target.value)} />
 					
 				</Form.Group>

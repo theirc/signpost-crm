@@ -36,7 +36,7 @@ class Sessions extends Component{
 
         return (
             <div>
-            <h3>Chat Sessions</h3>
+            <h3>Sesiones de Chat</h3>
             {sessions && sessions.length>0 &&
                 sessions.map(s => 
                         <UserSessions showFollowUpActions={true} reload={this.getSessionList.bind(this)} key={s.id} s={s}/>

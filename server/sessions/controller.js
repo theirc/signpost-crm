@@ -127,22 +127,46 @@ exports.checkStatus = async (req, res, next) => {
     console.log(err)
   );
 }
-exports.completeFollowUp = (req, res, next) => {
-    const { phone }  = req.body;
-    let number = phone.indexOf(":") > -1 ? phone.split(":")[1].replace("+", "") : phone.replace("+", "");
-    if(number){
-    Session.findAll({
-        limit :1,
-        where: { phone: number, followUpCompleted: false, messageSent: true },
-        order: [ [ 'id', 'DESC' ]]
-    }).then((entries) => {
-        if(entries){
-            entries[0] && entries[0].update({ followUpCompleted : true }).then((result) => res.json(result));
-        }
-    })}else{
-        res.send("Wrong phone number");
+
+exports.isReconnecting = async (req, res, next) => {
+    const { phone } = req.body;
+    const isMessenger = phone.match(/\d{16}/) ? true : false;
+    if (isMessenger){
+        Session.findAll({
+            limit :1,
+            where: { phone: phone, followUpCompleted: false, messageSent: true },
+            order: [ [ 'id', 'DESC' ]]
+        }).then(async (sessions) => {
+            if (sessions && sessions.length > 0) {
+                let result = await sessions[0] && sessions[0].update(
+                    { followUpCompleted : true }
+                )
+                res.send("flex") 
+            }
+            else{
+                res.send("home") 
+            }
+        })
+    }else{
+        const accountSid = process.env.TWILIO_SID;
+        const authToken = process.env.TWILIO_TOKEN;
+        const client = require('twilio')(accountSid, authToken);
+        client.messages
+        .list({
+            limit: 1,
+            to: phone,
+            order: 'desc'
+        })
+        .then(messages => {
+            let msg = messages[0];
+            let result = msg && msg.body.indexOf('Por favor responda este mensaje para chatear con un asistente') > -1 ? "flex" : "home";
+
+            res.send(result);
+        }).catch((err) => callback(null, {"error": err}));  
     }
+
 }
+
 //Remove Follow up flag
 async function updateFlag(id, sid, status){
     const result = await Session.update(

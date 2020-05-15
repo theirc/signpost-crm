@@ -130,11 +130,12 @@ exports.checkStatus = async (req, res, next) => {
 
 exports.isReconnecting = async (req, res, next) => {
     const { phone } = req.body;
-    const isMessenger = phone.match(/\d{16}/) ? true : false;
+    let number = phone.indexOf(":") > -1 && phone.split(":")[1];
+    const isMessenger = number.match(/\d{16}/) ? true : false;
     if (isMessenger){
         Session.findAll({
             limit :1,
-            where: { phone: phone, followUpCompleted: false, messageSent: true },
+            where: { phone: number, followUpCompleted: false, messageSent: true },
             order: [ [ 'id', 'DESC' ]]
         }).then(async (sessions) => {
             if (sessions && sessions.length > 0) {

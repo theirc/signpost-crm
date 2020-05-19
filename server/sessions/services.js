@@ -47,7 +47,7 @@ exports.analytics = function(categories) {
 	
   categories.forEach(c => {
 		var params = {
-			ec: c,
+			ec: c.label,
 			ea: 'New',
 		}
 		

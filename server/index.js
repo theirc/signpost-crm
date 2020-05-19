@@ -74,9 +74,92 @@ function verifyToken(req, res, next){
 
 function initCronJob() {
 	var CronJob = require('cron').CronJob;
-	var job = new CronJob('*/15 * * * * *', () => console.log(`cron at ${new Date().toLocaleTimeString()}`));
+	var job = new CronJob('*/1 * * * *', getMessages);
 	job.start();
 };
+
+
+const getMessages = async () => {
+  console.log("Get messages");
+  var currentDate = new Date();
+  var rangeDate = new Date();
+  rangeDate.setHours(currentDate.getHours() - 2);
+  console.log(currentDate, rangeDate);
+  let received, sent
+  try{
+    received = await client.messages.list({
+      dateSentAfter: rangeDate,
+      to:'whatsapp:+15184130994',
+    })
+  }catch(err){ console.log(err) }
+
+  if (received && received.length > 0){
+    try{
+      sent = await client.messages.list({
+        dateSentAfter: rangeDate,
+        from:'whatsapp:+15184130994',
+      })
+    }catch(err){ console.log(err) }
+
+    let unanswered = [];
+
+    received && received.forEach(r => {
+      let phone = r.from;
+      let time = r.dateSent;
+      var dif = moment.utc(moment(currentDate,"DD/MM/YYYY HH:mm:ss").diff(moment(time,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
+      let duration = moment.duration(dif).asHours();
+      if (duration > 1){
+        let replies = sent.filter(s => s.to == phone && s.dateSent > time);
+        if (replies.length == 0){
+          
+          unanswered[phone] = time;
+          
+        }
+      }
+    })
+    console.log(unanswered);
+    sendAlert(unanswered);
+  }
+}
+
+const sendAlert =  async (unanswered) => {
+  const got = require('got');
+
+  let message = "‼️ Hay mensajes sin responder en Twilio ‼️";
+  let body = "Mensajes sin responder en Twilio: \n";
+  Object.keys(unanswered).forEach( i => {
+    let number = "***"+i.substr(i.length-4, i.length);
+    body+="Número: "+number+" ("+unanswered[i]+")\n";
+    console.log(unanswered[i], i, body);
+  })
+  const requestBody = {
+    personalizations: [{ to: [{ email: 'andresd.aguilar@gmail.com' }] }],
+    from: { email: 'noreply@signpost.ngo' },
+    subject: message,
+    content: [
+          {
+            type: 'text/plain',
+            value: body
+          }
+      ]
+  };
+
+  got.post('https://api.sendgrid.com/v3/mail/send', {
+      headers: {
+        Authorization: `Bearer ${process.env.SENDGRID_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    })
+  .then(response => {
+    return response
+  })
+  .catch(err => {
+      console.log(err);
+      return null
+      }
+  );
+}
 
 
 function getChatNumbers(req, res){

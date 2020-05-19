@@ -74,7 +74,7 @@ function verifyToken(req, res, next){
 
 function initCronJob() {
 	var CronJob = require('cron').CronJob;
-	var job = new CronJob('0 */1 * * *', getMessages);
+	var job = new CronJob('0 */4 * * *', getMessages);
 	job.start();
 };
 
@@ -83,7 +83,7 @@ const getMessages = async () => {
   console.log("Get messages");
   var currentDate = new Date();
   var rangeDate = new Date();
-  rangeDate.setHours(currentDate.getHours() - 2);
+  rangeDate.setHours(currentDate.getHours() - 5);
   console.log(currentDate, rangeDate);
   let received, sent
   try{

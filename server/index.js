@@ -133,7 +133,7 @@ const sendAlert =  async (unanswered) => {
     console.log(unanswered[i], i, body);
   })
   const requestBody = {
-    personalizations: [{ to: [{ email: 'andresd.aguilar@gmail.com' }] }],
+    personalizations: [{ to: [{ email: 'andresd.aguilar@gmail.com' }, { email: 'info@signpost.com' }] }],
     from: { email: 'noreply@signpost.ngo' },
     subject: message,
     content: [

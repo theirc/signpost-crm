@@ -74,7 +74,7 @@ function verifyToken(req, res, next){
 
 function initCronJob() {
 	var CronJob = require('cron').CronJob;
-	var job = new CronJob('*/1 * * * *', getMessages);
+	var job = new CronJob('0 */1 * * *', getMessages);
 	job.start();
 };
 

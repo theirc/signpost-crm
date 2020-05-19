@@ -6,6 +6,8 @@ require('dotenv').config();
 
 const pushToGSheet = async data => {
 	// Auth
+	console.log('Account: ', process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL);
+
 	const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
 	await doc.useServiceAccountAuth({
 		client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,

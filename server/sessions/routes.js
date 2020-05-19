@@ -3,7 +3,7 @@ const validate = require('express-validation');
 const controller = require('./controller');
 const verifyToken = require('../middleware/auth');
 const { session } = require('./validations');
-
+const services = require('./services');
 const router = express.Router();
 
 router.route('/').get(verifyToken, controller.sessionsList);
@@ -13,6 +13,8 @@ router.route('/send-message').post(verifyToken, controller.sendMessage);
 router.route('/send-message-messenger').post(verifyToken, controller.sendMessageMessenger);
 router.route('/check-status').post(verifyToken, controller.checkStatus);
 router.route('/is-reconnecting').post(controller.isReconnecting);
+
+router.route('/export').post(services.getCategoriesStats);
 //router.route('/complete').post(controller.completeFollowUp);
 // router.route('/:id').put(verifyToken, controller.updateSession);
 // router.route('/:id').delete(verifyToken, controller.deleteSession);

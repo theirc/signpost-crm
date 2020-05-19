@@ -32,10 +32,10 @@ exports.getCategoriesStats = async () =>{
     where SC.SessionId is not null) as catlist \
     group by name;"
   db.sequelize.query(query, { type: Sequelize.QueryTypes.SELECT })
-  .then(result =>  {
+  .then(async result =>  {
     /// Insert stats into Spreadsheet
 		// Result: [ { name: 'zzzz' , total: 999}, ... ]
-		pushToGSheet(result);
+		await pushToGSheet(result);
 		
     console.log("Result:", result);
   });

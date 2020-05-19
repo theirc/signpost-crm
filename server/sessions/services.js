@@ -2,6 +2,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const db = require('../config/db');
 const Sequelize = require('sequelize');
+require('dotenv').config();
 
 const pushToGSheet = async data => {
 	// Auth
@@ -35,9 +36,8 @@ exports.getCategoriesStats = async () =>{
   .then(async result =>  {
     /// Insert stats into Spreadsheet
 		// Result: [ { name: 'zzzz' , total: 999}, ... ]
+		console.log("Result:", result);
 		await pushToGSheet(result);
-		
-    console.log("Result:", result);
   });
 }
 

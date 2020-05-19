@@ -20,6 +20,7 @@
     "dotenv": "^8.2.0",
     "express-validation": "^1.0.3",
     "got": "^11.1.4",
+    "google-spreadsheet": "^3.0.11",
     "helmet": "^3.21.2",
     "i18next": "^19.0.3",
     "joi": "^14.3.1",

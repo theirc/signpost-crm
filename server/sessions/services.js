@@ -40,3 +40,24 @@ exports.getCategoriesStats = async () =>{
     console.log("Result:", result);
   });
 }
+
+exports.analytics = function(categories) {
+	const ua = require('universal-analytics');
+	let visitor = ua(context.GA_KEY, event.FlowSid, {strictCidFormat: false});
+	
+  categories.forEach(c => {
+		var params = {
+			ec: c,
+			ea: 'New',
+		}
+		
+		visitor.event(params, function (err) {
+				if(err) {
+						console.log(err);
+						return false
+				}
+				return true
+		});
+	})
+	
+};

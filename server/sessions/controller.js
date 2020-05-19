@@ -1,7 +1,7 @@
 //const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const services = require('./services');
-const { getList, getCategoriesStats } = services;
+const { getList, getCategoriesStats, analytics } = services;
 const request = require('request');
 const roles = require('../config/roles');
 const Session = require('./model');
@@ -40,6 +40,7 @@ exports.getSession = async (req, res, next) =>{
 exports.newSession = async (req, res, next) => {
     const {user} = req;
     let catList = req.body.categories && req.body.categories.map(c => c.value)
+    let catNames = req.body.categories && req.body.categories.map(c => c.value)
     let session = Session.build({
         phone: req.body.phone,
         categories: req.body.categories,
@@ -52,6 +53,7 @@ exports.newSession = async (req, res, next) => {
     .then((session) => {
         session.save().then((session) =>{
             session.addCategory(catList);
+            analytics(req.body.categories);
             //Save again after add category to get the record updated before the stats lookup
             session.save().then(async (s) => {
                 getCategoriesStats();

@@ -72,11 +72,6 @@ function verifyToken(req, res, next){
   }
 }
 
-function initCronJob() {
-	var CronJob = require('cron').CronJob;
-	var job = new CronJob('0 */4 * * *', getMessages);
-	job.start();
-};
 
 
 const getMessages = async () => {
@@ -161,6 +156,12 @@ const sendAlert =  async (unanswered) => {
   );
 }
 
+
+function initCronJob() {
+	var CronJob = require('cron').CronJob;
+	var job = new CronJob('0 */4 * * *', () => getMessages());
+	job.start();
+};
 
 function getChatNumbers(req, res){
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from

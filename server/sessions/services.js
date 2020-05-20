@@ -18,7 +18,7 @@ const pushToGSheet = async data => {
 	await doc.loadInfo();
 
 	// Choose first sheet
-	const sheet = doc.sheetsByIndex[0];
+	const sheet = doc.sheetsByIndex[process.env.GOOGLE_SPREADSHEET_TAB];
 
 	// Clear old data
 	await sheet.clear();

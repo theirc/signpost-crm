@@ -22,7 +22,6 @@ class Sessions extends Component{
     }
     getSessionList(){
         api.getSessions().then(list => {
-            console.log("list", list);
             if (list == null){
                 this.setState({redirect: true, sessions:[]})
             }else{
@@ -33,12 +32,11 @@ class Sessions extends Component{
 
     render(){
         const { sessions } = this.state;
-        console.log(this.state.redirect);
         if (this.state.redirect) return <Redirect to="/login"/>
 
         return (
             <div>
-            <h3>Chat Sessions</h3>
+            <h3>Sesiones de Chat</h3>
             {sessions && sessions.length>0 &&
                 sessions.map(s => 
                         <UserSessions showFollowUpActions={true} reload={this.getSessionList.bind(this)} key={s.id} s={s}/>

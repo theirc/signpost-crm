@@ -1,7 +1,7 @@
 //const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const services = require('./services');
-const { getList } = services;
+const { getList, getCategoriesStats, analytics } = services;
 const request = require('request');
 const roles = require('../config/roles');
 const Session = require('./model');
@@ -40,6 +40,7 @@ exports.getSession = async (req, res, next) =>{
 exports.newSession = async (req, res, next) => {
     const {user} = req;
     let catList = req.body.categories && req.body.categories.map(c => c.value)
+    let catNames = req.body.categories && req.body.categories.map(c => c.value)
     let session = Session.build({
         phone: req.body.phone,
         categories: req.body.categories,
@@ -50,23 +51,20 @@ exports.newSession = async (req, res, next) => {
     })
     session.save()
     .then((session) => {
-        session.addCategory(catList);
-        session.save().then((session) =>
-            res.send(session)
-        )
+        session.save().then((session) =>{
+            session.addCategory(catList);
+            analytics(req.body.categories);
+            //Save again after add category to get the record updated before the stats lookup
+            session.save().then(async (s) => {
+                getCategoriesStats();
+                res.send(s)
+            })
+            
+        })
         .catch((err) => res.send(err));;
     }
     )
 }
-
-exports.updateSession = async (req, res, next) =>{
-
-}
-
-exports.deleteSession = async (req, res, next) =>{
-
-}
-
 
 exports.sendMessage = async (req, res, next) => {
     // Send message and remove Follow-Up Flag
@@ -81,12 +79,31 @@ exports.sendMessage = async (req, res, next) => {
         from: 'whatsapp:+15184130994',
         to: `whatsapp:+${phone}`,
     }).then(m => {
-        console.log("message", m);
         (async function UpdateFlag(){
-            console.log("updating flag");
             const result = await updateFlag(id, m.sid, m.status);
-            console.log("flag updated");
-            console.log("sending res");
+            res.json({status: m.status, sid: m.sid})
+        })();
+    }).catch((error) => {
+        res.json(error);
+    });
+      
+}
+
+exports.sendMessageMessenger = async (req, res, next) => {
+    // Send message and remove Follow-Up Flag
+    const { id, phone, text } = req.body;
+    console.log(id, phone, text);
+    
+    const accountSid = process.env.TWILIO_SID;
+    const authToken = process.env.TWILIO_TOKEN;
+    const client = require('twilio')(accountSid, authToken);
+    client.messages.create({
+        body: text,
+        from: 'Messenger:2039927102928299',
+        to: `Messenger:${phone}`,
+    }).then(m => {
+        (async function UpdateFlag(){
+            const result = await updateFlag(id, m.sid, m.status);
             res.json({status: m.status, sid: m.sid})
         })();
     }).catch((error) => {
@@ -112,22 +129,47 @@ exports.checkStatus = async (req, res, next) => {
     console.log(err)
   );
 }
-exports.completeFollowUp = (req, res, next) => {
-    const { phone }  = req.body;
-    let number = phone.indexOf(":") > -1 ? phone.split(":")[1].replace("+", "") : phone.replace("+", "");
-    if(number){
-    Session.findAll({
-        limit :1,
-        where: { phone: number, followUpCompleted: false, messageSent: true },
-        order: [ [ 'id', 'DESC' ]]
-    }).then((entries) => {
-        if(entries){
-            entries[0] && entries[0].update({ followUpCompleted : true }).then((result) => res.json(result));
-        }
-    })}else{
-        res.send("Wrong phone number");
+
+exports.isReconnecting = async (req, res, next) => {
+    const { phone } = req.body;
+    let number = phone.indexOf(":") > -1 && phone.split(":")[1];
+    const isMessenger = number.match(/\d{16}/) ? true : false;
+    if (isMessenger){
+        Session.findAll({
+            limit :1,
+            where: { phone: number, followUpCompleted: false, messageSent: true },
+            order: [ [ 'id', 'DESC' ]]
+        }).then(async (sessions) => {
+            if (sessions && sessions.length > 0) {
+                let result = await sessions[0] && sessions[0].update(
+                    { followUpCompleted : true }
+                )
+                res.send("flex") 
+            }
+            else{
+                res.send("home") 
+            }
+        })
+    }else{
+        const accountSid = process.env.TWILIO_SID;
+        const authToken = process.env.TWILIO_TOKEN;
+        const client = require('twilio')(accountSid, authToken);
+        client.messages
+        .list({
+            limit: 1,
+            to: phone,
+            order: 'desc'
+        })
+        .then(messages => {
+            let msg = messages[0];
+            let result = msg && msg.body.indexOf('Por favor responda este mensaje para chatear con un asistente') > -1 ? "flex" : "home";
+
+            res.send(result);
+        }).catch((err) => callback(null, {"error": err}));  
     }
+
 }
+
 //Remove Follow up flag
 async function updateFlag(id, sid, status){
     const result = await Session.update(
@@ -139,13 +181,11 @@ async function updateFlag(id, sid, status){
         },
         { where: {id: id}}
     ).then(r => {
-        console.log("update flag completed");
         return r;
     })
     .catch(function(err) {
         return err
     })
-    console.log("Finish update")
 }
 
 async function updateStatus(id, status){

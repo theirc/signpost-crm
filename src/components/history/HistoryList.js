@@ -5,7 +5,7 @@ import './Message.css';
 const HistoryList = ({history, phone}) => {
     return (
         <div className="history-list content section">
-            <h5>History</h5>
+            <h5>Historial</h5>
             <div className="history-list-window">
                 {history && history.map((message,index) => {
                     return (

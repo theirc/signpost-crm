@@ -63,6 +63,14 @@ const api = {
 
         return fetch(url, {method: 'POST', headers: headers, body: JSON.stringify({ phone: phone, id: id })}).then(r => r.json()).then(res => { return res} );
     },
+    sendMessageMessenger: async (phone, id, text) => {
+        const url = '/api/sessions/send-message-messenger';
+        let { login } = store.getState();
+        if (!login.user) return '';
+        let headers = composeHeader(login.token);
+
+        return fetch(url, {method: 'POST', headers: headers, body: JSON.stringify({ phone: phone, id: id, text: text })}).then(r => r.json()).then(res => { return res} );
+    },
     checkStatus: async(sid, id) => {
         const url = '/api/sessions/check-status';
         let { login } = store.getState();

@@ -40,7 +40,7 @@ exports.getSession = async (req, res, next) =>{
 exports.newSession = async (req, res, next) => {
     const {user} = req;
     let catList = req.body.categories && req.body.categories.map(c => c.value)
-    let catNames = req.body.categories && req.body.categories.map(c => c.value)
+    let catNames = req.body.categories && req.body.categories.map(c => c.label)
     let session = Session.build({
         phone: req.body.phone,
         categories: req.body.categories,
@@ -63,7 +63,11 @@ exports.newSession = async (req, res, next) => {
         })
         .catch((err) => res.send(err));;
     }
+    
     )
+    catNames.forEach(c => {
+        sendAnalytics("Session Category", c)
+    });
 }
 
 exports.sendMessage = async (req, res, next) => {
@@ -195,4 +199,23 @@ async function updateStatus(id, status){
         },
         { where: {id: id}}
     )
+}
+
+const sendAnalytics = (category, action) => {
+    const ua = require('universal-analytics');
+    let visitor = ua(process.env.GA_KEY, 1, {strictCidFormat: false});
+        
+    var params = {
+        ec: category,
+        ea: action,
+    }
+    
+    console.log(params);
+    visitor.event(params, function (err) {
+        if(err) {
+            console.log(err);
+            
+        }
+        
+    });
 }

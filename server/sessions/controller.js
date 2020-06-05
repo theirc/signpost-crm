@@ -1,7 +1,7 @@
 //const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const services = require('./services');
-const { getList, getCategoriesStats, analytics } = services;
+const { getList, getCategoriesStats, analytics, getLogs } = services;
 const request = require('request');
 const roles = require('../config/roles');
 const Session = require('./model');
@@ -172,6 +172,12 @@ exports.isReconnecting = async (req, res, next) => {
         }).catch((err) => callback(null, {"error": err}));  
     }
 
+}
+
+exports.getLogs = async (req, res, next) =>{
+    const { phone } = req.body;
+    let logs = await getLogs(phone);    
+    res.send(logs);
 }
 
 //Remove Follow up flag

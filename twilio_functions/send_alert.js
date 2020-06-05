@@ -7,7 +7,7 @@ exports.handler = function(context, event, callback) {
     
     let message = "📣Nuevo mensaje en Flex!";
     if (phone.indexOf("5493413523631") > -1 || phone.indexOf("2817027983 ") > -1 || phone.indexOf("6464770403  ") > -1 || phone.indexOf("13474193010  ") > -1){
-        message = "⚠ TEST - Nuevo mensaje en Flex!";
+        message = "Tienes un nuevo mensaje en Flex, por favor responda en la plataforma. Gracias";
     }
    
     const client = require('twilio')(accountSid, authToken);

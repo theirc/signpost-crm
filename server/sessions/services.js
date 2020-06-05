@@ -38,14 +38,14 @@ exports.getCategoriesStats = async () =>{
   .then(async result =>  {
     /// Insert stats into Spreadsheet
 		// Result: [ { name: 'zzzz' , total: 999}, ... ]
-		console.log("Result:", result);
+		
 		await pushToGSheet(result);
   });
 }
 
 exports.analytics = function(categories) {
 	const ua = require('universal-analytics');
-	let visitor = ua(context.GA_KEY, event.FlowSid, {strictCidFormat: false});
+	let visitor = ua(process.env.GA_KEY, 'visitor', {strictCidFormat: false});
 	
   categories.forEach(c => {
 		var params = {
@@ -63,3 +63,48 @@ exports.analytics = function(categories) {
 	})
 	
 };
+
+exports.getLogs = async (phone) => {
+	const isMessenger = phone.match(/\d{16}/) ? true : false;
+	let number = isMessenger ? 'Messenger:'+phone : 'whatsapp:+'+phone;
+	
+  token = process.env.TWILIO_TOKEN;
+  sid = process.env.TWILIO_SID;
+  
+	let result = await Promise.all([getLog(number, "inbound"), getLog(number, "outbound")])
+	let logs = getChat(result[0], result[1]);
+	return logs;
+
+}
+
+const getLog = async (number, direction) => {
+	token = process.env.TWILIO_TOKEN;
+  sid = process.env.TWILIO_SID;
+	const client = require('twilio')(sid, token);
+	if (direction === "inbound"){
+		return client.messages.list({
+			from: number,
+			limi: 200,
+			order: 'desc'
+		})
+	}else{
+		return client.messages.list({
+			to: number,
+			limi: 200,
+			order: 'desc'
+		})
+	}
+}
+
+
+function getChat(from, to){
+	let chat = [...from, ...to].sort(function(a,b){
+			return new Date(a.dateCreated) - new Date(b.dateCreated);
+	});
+	if (chat.length > 100){
+		chat = chat.slice(chat.length-50);
+	}	
+	chat = chat.map(c => { return {"date": c.dateCreated, "from": c.from, "to": c.to, "body": c.body}} )
+	return chat;
+	 
+}

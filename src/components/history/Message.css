@@ -9,6 +9,7 @@
 }
 .message-green{
     background-color: #dcf8c6;
+    color: black;
 }
 .message-blue{
     background-color: rgb(0, 153, 255);

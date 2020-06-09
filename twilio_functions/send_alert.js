@@ -17,22 +17,22 @@ exports.handler = function(context, event, callback) {
     client.messages
       .create({
          body: message,
-         from: '+15184130994',
-         to: '+50360077806'
+         from: 'whatsapp:+15184130994',
+         to: 'whatsapp:+50360077806'
        })
     
     client.messages
       .create({
          body: message,
-         from: '+15184130994',
-         to: '+50372628694'
+         from: 'whatsapp:+15184130994',
+         to: 'whatsapp:+50372628694'
        })
       
     client.messages
       .create({
          body: message,
-         from: '+15184130994',
-         to: '+50379568852'
+         from: 'whatsapp:+15184130994',
+         to: 'whatsapp:+50379568852'
        })
 
     // Send EMAIL

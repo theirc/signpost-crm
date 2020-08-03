@@ -2,6 +2,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const db = require('../config/db');
 const Sequelize = require('sequelize');
+const moment = require('moment');
 require('dotenv').config();
 
 const pushToGSheet = async data => {
@@ -38,7 +39,8 @@ exports.getCategoriesStats = async () =>{
   .then(async result =>  {
     /// Insert stats into Spreadsheet
 		// Result: [ { name: 'zzzz' , total: 999}, ... ]
-		
+		result.push({});
+		result.push({ name: `Last updated: ${moment(new Date()).format('ll')}`});
 		await pushToGSheet(result);
   });
 }

@@ -23,6 +23,25 @@ const api = {
             })
         })
     },
+    getLogs: (phone) => {
+        const url = `/api/sessions/get-logs`;
+        let { login } = store.getState();
+        if (!login.user) return [];
+        return new Promise((resolve, reject) => {
+            let headers = composeHeader(login.token);
+
+            fetch(url, {method: 'POST', body: JSON.stringify({ phone: phone }), headers: headers})
+            .then(
+                r => {                    
+                    if (r.status != 200) return resolve(null);
+                    return r.json()
+                }
+            )
+            .then(list => {
+                resolve(list);
+            })
+        })
+    },
     getCategories: () => {
         const url = '/api/categories';
         let { login } = store.getState();

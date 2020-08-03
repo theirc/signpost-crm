@@ -71,7 +71,7 @@ class CreateSession extends Component {
         this.searchSessions(this.state.phone);
     }
 
-    searchSessions = (phone) => {
+    searchSessions = async (phone) => {
         api.getSessions(phone).then(list => {
             if (list == null){
                 this.setState({redirect: true, userSessions: []});
@@ -80,14 +80,11 @@ class CreateSession extends Component {
             }
             
         });
-        fetch(`https://mustard-himalayan-7945.twil.io/get_logs?phone=${phone}`)
-        .then((response) => {
-            return response.json()
+        let logs = await api.getLogs(phone);
+        api.getLogs(phone).then(history => {
+            this.setState({history: history, loadingHistory: false})
         })
-        .then((history) => {
-            this.setState({history: history.result, loadingHistory: false});
-            
-        })
+        
     }
 
     getCategoryList = () => {

@@ -7,7 +7,7 @@ exports.handler = function(context, event, callback) {
     
     let message = "📣Nuevo mensaje en Flex!";
     if (phone.indexOf("5493413523631") > -1 || phone.indexOf("2817027983 ") > -1 || phone.indexOf("6464770403  ") > -1 || phone.indexOf("13474193010  ") > -1){
-        message = "⚠ TEST - Nuevo mensaje en Flex!";
+        message = "Tienes un nuevo mensaje en Flex, por favor responda en la plataforma. Gracias";
     }
    
     const client = require('twilio')(accountSid, authToken);
@@ -17,22 +17,22 @@ exports.handler = function(context, event, callback) {
     client.messages
       .create({
          body: message,
-         from: '+15184130994',
-         to: '+50360077806'
+         from: 'whatsapp:+15184130994',
+         to: 'whatsapp:+50360077806'
        })
     
     client.messages
       .create({
          body: message,
-         from: '+15184130994',
-         to: '+50372628694'
+         from: 'whatsapp:+15184130994',
+         to: 'whatsapp:+50372628694'
        })
       
     client.messages
       .create({
          body: message,
-         from: '+15184130994',
-         to: '+50379568852'
+         from: 'whatsapp:+15184130994',
+         to: 'whatsapp:+50379568852'
        })
 
     // Send EMAIL

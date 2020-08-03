@@ -75,6 +75,9 @@ function verifyToken(req, res, next){
 
 
 const getMessages = async () => {
+  token = process.env.TWILIO_TOKEN;
+  sid = process.env.TWILIO_SID;
+	const client = require('twilio')(sid, token);
   console.log("Get messages");
   var currentDate = new Date();
   var rangeDate = new Date();

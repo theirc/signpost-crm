@@ -13,9 +13,8 @@ router.route('/send-message').post(verifyToken, controller.sendMessage);
 router.route('/send-message-messenger').post(verifyToken, controller.sendMessageMessenger);
 router.route('/check-status').post(verifyToken, controller.checkStatus);
 router.route('/is-reconnecting').post(controller.isReconnecting);
+router.route('/get-logs').post(controller.getLogs);
 
 router.route('/export').post(services.getCategoriesStats);
-//router.route('/complete').post(controller.completeFollowUp);
-// router.route('/:id').put(verifyToken, controller.updateSession);
-// router.route('/:id').delete(verifyToken, controller.deleteSession);
+
 module.exports = router;

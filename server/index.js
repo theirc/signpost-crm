@@ -7,6 +7,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const twilio = require('twilio');
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 require('dotenv').config();
 
 const request = require('request');
@@ -27,7 +28,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-  //res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER); 
+  //res.header("Access-Control-Allow-Origin", process.env.FLEX_ORIGIN_HEADER);
   next();
 });
 
@@ -39,7 +40,7 @@ app.use("/chatnumbers", getChatNumbers);
 initCronJob();
 
 app.get('/api/ping', function (req, res) {
-  return res.send('pong'); 
+  return res.send('pong');
 });
 
 
@@ -109,9 +110,9 @@ const getMessages = async () => {
       if (duration > 1){
         let replies = sent.filter(s => s.to == phone && s.dateSent > time);
         if (replies.length == 0){
-          
+
           unanswered[phone] = time;
-          
+
         }
       }
     })
@@ -179,7 +180,7 @@ function getChatNumbers(req, res){
       from:'whatsapp:+15184130994',
   }).then(list => {
       //list.forEach(m => console.log(m.body.replace("\n", "").substr(0,30)))
-      
+
       let chats = list.filter(m => m.body.toLowerCase().indexOf("pronto un asistente") > -1);
       chats.forEach(m => numbers.push(m.to));;
       let phoneNumbers = [...new Set(numbers)];

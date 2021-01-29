@@ -10,7 +10,7 @@ require('dotenv').config();
 exports.categoryList = async (req, res, next) => {
     let where = req.user.country ? { country: req.user.country } : {};
     Category.findAndCountAll({
-        order: [['createdAt', 'DESC']],
+        order: [['name', 'ASC']],
         where: where
     }).then(categories => res.send(categories))
   };

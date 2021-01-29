@@ -11,15 +11,15 @@ exports.handler = function(context, event, callback) {
                 "fields.slug": 'el-salvador-twilio-home',
                 locale: 'es',
             })
-            .then(c => { 
+            .then(c => {
                 callback(null, c.items[0].fields.options[cat].fields.option1);
-               
+
             })
             .catch(e => {
-                
+
                 callback(null, "Se ha producido un error al recuperar la lista de artículos y se ha reportado al Administrador");
             });
-  
+
 };
 
 
@@ -27,7 +27,7 @@ function sendError(error){
     const got = require('got');
 
     const requestBody = {
-        personalizations: [{ to: [{ email: 'andresd.aguilar@gmail.com' }] }],
+        personalizations: [{ to: [{ email: 'leonardo.garcia@rescue.org' }] }],
         from: { email: 'noreply@signpost.ngo' },
         subject: 'ERROR EN GET ARTICLES: '+error,
         content: [
@@ -37,7 +37,7 @@ function sendError(error){
               }
           ]
     };
-    
+
     got.post('https://api.sendgrid.com/v3/mail/send', {
         headers: {
           Authorization: `Bearer ${context.SENDGRID_KEY}`,

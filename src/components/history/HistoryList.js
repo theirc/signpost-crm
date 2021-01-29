@@ -7,7 +7,7 @@ const HistoryList = ({history, phone}) => {
     const windowClass = isMessenger ? "history-list-window-messenger" : "history-list-window";
     return (
         <div className="history-list content section">
-            <h5>Historial</h5>
+            <h5>History</h5>
             <div className={windowClass}>
                 {history && history.map((message,index) => {
                     return (

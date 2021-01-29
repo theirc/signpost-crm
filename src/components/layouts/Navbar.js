@@ -13,7 +13,7 @@ const Navbar = (props) => {
                 <Link to={homeLink} className="brand-logo crm-logo">Signpost CRM</Link>
                 {user && user.name && <ul className="right">
                     <li><NavLink to={homeLink}>  <i className="large material-icons home-icon">home</i></NavLink></li>
-                    {!flex && <li><NavLink to='/session/create'>Nuevo chat</NavLink></li>}
+                    {!flex && <li><NavLink to='/session/create'>New chat</NavLink></li>}
                     <li><a onClick={props.logOut}>Log Out</a></li>
                     <li><NavLink to={homeLink} className="btn btn-floating pink lighten-1">{user.initials}</NavLink></li>
                 </ul> }
@@ -33,4 +33,3 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
-

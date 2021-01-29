@@ -12,11 +12,10 @@ exports.handler = function(context, event, callback) {
   })
   .then(c => {
       callback(null, c.items[0].fields.initial_message.trim());
-      
+
   })
   .catch(e => {
       callback(null, { error:e });
   });
-  
-};
 
+};

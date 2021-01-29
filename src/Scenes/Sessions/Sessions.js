@@ -9,7 +9,7 @@ class Sessions extends Component{
     constructor( props ){
         super(props);
     }
-    
+
     state = {
         sessions : [],
         loading: false,
@@ -36,12 +36,12 @@ class Sessions extends Component{
 
         return (
             <div>
-            <h3>Sesiones de Chat</h3>
+            <h3>Chat Sessions</h3>
             {sessions && sessions.length>0 &&
-                sessions.map(s => 
+                sessions.map(s =>
                         <UserSessions showFollowUpActions={true} reload={this.getSessionList.bind(this)} key={s.id} s={s}/>
                     )}
-            
+
             </div>
         )
     }

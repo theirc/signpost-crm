@@ -18,7 +18,7 @@ import Sessions from './Sessions';
 import { TaskChannelInstance } from 'twilio/lib/rest/taskrouter/v1/workspace/taskChannel';
 
 class CreateSession extends Component {
-    
+
     state = {
         phone : this.props.match.params.phone ? this.props.match.params.phone : '',
         notes: '',
@@ -28,7 +28,7 @@ class CreateSession extends Component {
         userSessions: [],
         categories: null,
         categoryList: [],
-        redirect: false,
+        redirect: false
     }
 
     componentDidMount(){
@@ -61,7 +61,7 @@ class CreateSession extends Component {
         session.history = null;
         const { flex } = this.props;
         api.saveSession(session).then(result => this.props.history.push(flex ? "/flex" : "/"));
-        
+
     }
     updateTaskCount = (count) => {
         this.setState({taskCount : count});
@@ -78,13 +78,13 @@ class CreateSession extends Component {
             }else{
                 this.setState({userSessions: list.rows})
             }
-            
+
         });
         let logs = await api.getLogs(phone);
         api.getLogs(phone).then(history => {
             this.setState({history: history, loadingHistory: false})
         })
-        
+
     }
 
     getCategoryList = () => {
@@ -94,12 +94,12 @@ class CreateSession extends Component {
             } else{
                 this.setState({categoryList : list.rows});
             }
-            
+
         })
     }
 
     render() {
-        
+
         const { user, flex } = this.props;
         const { phone, loadingHistory, history, categories, userSessions, tasks, taskCount, categoryList } = this.state;
         const saveDisabled = phone && categories && categories.length > 0 ? "": "disabled";
@@ -109,60 +109,60 @@ class CreateSession extends Component {
         return (
             <div className="createSession">
             {!flex &&  <Navbar user={user}/>}
-            
+
             <div className="container container-flex">
-            <h5 className="m-b-40">Crear Nueva sesión de Chat</h5>
+            <h5 className="m-b-40">Create New Chat Session</h5>
                 <div className="row">
                     <div className="col s6">
                         <form onSubmit={this.handleSubmit} className="chat-form">
-                            
+
                             <div className="input-field">
-                                <label htmlFor="phone">Número de teléfono</label>
-                                <input type="number" id="phone" value={phone} onChange={this.handleChange}/>                        
+                                <label htmlFor="phone">Phone number</label>
+                                <input type="number" id="phone" value={phone} onChange={this.handleChange}/>
                             </div>
                             <div className="input-field">
-                                <label htmlFor="notes">Notas</label>
+                                <label htmlFor="notes">Notes</label>
                                 <textarea rows="3" id="notes" className="materialize-textarea " onChange={this.handleChange}></textarea>
                             </div>
-                            
+
                             <div className="input m-t-20">
-                                <label htmlFor="category" className="m-b-20">Categorías</label>
+                                <label htmlFor="category" className="m-b-20">Categories</label>
                                 <Select id="category" isMulti={true} values={categories} styles={customStyles} options={catOptions} onChange={this.handleChangeCategory}/>
                             </div>
                             <label className="m-t-20">
                                 <input type="checkbox" id="followup" onClick={this.handleChangeFollowUp} />
-                                <span>Requiere Seguimiento</span>
+                                <span>Requires follow-up</span>
                             </label>
                             <div className="row m-t-20">
-                                
+
                                 <div className="col s12">
-                                    {phone && !loadingHistory && !flex && 
-                                    
+                                    {phone && !loadingHistory && !flex &&
+
                                     <div className="input-field pull-left">
-                                        <button className="btn blue lighten-1 z-depth-0" onClick={this.handleSearch}>Buscar Historial</button>
+                                        <button className="btn blue lighten-1 z-depth-0" onClick={this.handleSearch}>Search History</button>
                                     </div>
                                     }
                                     <div className="input-field pull-right">
-                                        <button className="btn blue z-depth-0" disabled={saveDisabled}>Grabar</button>
+                                        <button className="btn blue z-depth-0" disabled={saveDisabled}>Record</button>
                                     </div>
                                 </div>
                             </div>
-                            
-                            {loadingHistory && 
-                            <p>Cargando historial...</p> }
+
+                            {loadingHistory &&
+                            <p>Loading History...</p> }
                         </form>
                         {history && history.length > 0 &&
                             <div className="row">
-                            <div className="col s12"> 
+                            <div className="col s12">
                                 <HistoryList history={history} phone={phone}/>
                             </div>
                             </div>
                         }
                     </div>
                     <div className="col s6">
-                        <h5>Actividad</h5>
+                        <h5>Activity</h5>
                         {showSessions && userSessions && userSessions.length>0 &&
-                                userSessions.map(s => 
+                                userSessions.map(s =>
                                      <UserSessions showFollowUpActions={false} key={s.id} s={s}/>
                         )}
                     </div>

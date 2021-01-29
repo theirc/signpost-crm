@@ -8,11 +8,11 @@ require('dotenv').config();
 
 
 exports.categoryList = async (req, res, next) => {
-    
+    let where = req.user.country ? { country: req.user.country } : {};
     Category.findAndCountAll({
-        order: [['createdAt', 'DESC']]
+        order: [['createdAt', 'DESC']],
+        where: where
     }).then(categories => res.send(categories))
-    
   };
 
 exports.addCategory = async(req, res, next) => {
@@ -27,8 +27,8 @@ exports.addCategory = async(req, res, next) => {
     }catch(err){
         res.send(err);
     }
-    
-    
+
+
 }
 
 exports.editCategory = async(req, res, next) => {
@@ -41,11 +41,11 @@ exports.editCategory = async(req, res, next) => {
         },
         {where: {id: id}}
         )
-        res.send(category); 
+        res.send(category);
     }catch(err){
         res.send(err);
     }
-    
+
 }
 
 exports.removeCategory = async(req, res, next) => {
@@ -56,6 +56,6 @@ exports.removeCategory = async(req, res, next) => {
     }catch(err){
         res.send(err);
     }
-    
-    
+
+
 }

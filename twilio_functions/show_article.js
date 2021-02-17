@@ -53,7 +53,7 @@ function sendError(error){
     const got = require('got');
 
     const requestBody = {
-        personalizations: [{ to: [{ email: 'andresd.aguilar@gmail.com' }] }],
+        personalizations: [{ to: [{ email: 'info@signpost.com' }] }],
         from: { email: 'noreply@signpost.ngo' },
         subject: 'ERROR EN GET ARTICLES: '+error,
         content: [

@@ -116,7 +116,7 @@ class UserSessions extends Component{
                 {this.state.showSendMessage && !isMessenger &&
                 <div className="hoverable">
                     <h6><strong>Send the following message and remove the "Requires follow-up" mark</strong></h6>
-                    <h6>`Hello! We have new information regarding your inquiry. Please reply this message to chat with an assistant.`</h6>
+                    <h6>`Hello! We have new information regarding your inquiry. Please reply to this message to chat with an assistant.`</h6>
                     <div className="message-footer">
                     <a className="waves-effect waves-light btn blue darken-3 btn-message" onClick={this.handleSendMessage.bind(this)}>Send <i className="material-icons right">send</i></a>
                     <a className="waves-effect waves-light btn b deep-orange accent-4 btn-message" onClick={this.handleHideSendMessage.bind(this)}>Cancel<i className="material-icons right">cancel</i></a>

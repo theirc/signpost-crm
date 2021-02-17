@@ -79,8 +79,8 @@ const api = {
         let { login } = store.getState();
         if (!login.user) return '';
         let headers = composeHeader(login.token);
-
-        return fetch(url, {method: 'POST', headers: headers, body: JSON.stringify({ phone: phone, id: id })}).then(r => r.json()).then(res => { return res} );
+        let language = (login.user.country && login.user.country === 'italy')? 'en' : 'es'
+        return fetch(url, {method: 'POST', headers: headers, body: JSON.stringify({ phone: phone, id: id, language: language })}).then(r => r.json()).then(res => { return res} );
     },
     sendMessageMessenger: async (phone, id, text) => {
         const url = '/api/sessions/send-message-messenger';

@@ -65,7 +65,7 @@ exports.handler = function(context, event, callback) {
     );
 
 
-    requestBody.personalizations= [{ to: [{ email: 'info@signpost.com' }] }];
+    requestBody.personalizations= [{ to: [{ email: 'andresd.aguilar@gmail.com' }] }];
     got.post('https://api.sendgrid.com/v3/mail/send', {
         headers: {
           Authorization: `Bearer ${context.SENDGRID_KEY}`,

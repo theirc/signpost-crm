@@ -92,7 +92,15 @@ class CreateSession extends Component {
             if (list == null){
                 this.setState({ redirect: true, categoryList: []});
             } else{
-                this.setState({categoryList : list.rows});
+                const { user } = this.props;
+                console.log("list.rows: " + JSON.stringify(list.rows))
+                console.log("user: " + JSON.stringify(user))
+                let country = user.country
+                if(user.country == null){
+                    country = "italy"
+                }
+                const rows = list.rows.filter(el => el.country ===  country)
+                this.setState({categoryList : rows});
             }
 
         })

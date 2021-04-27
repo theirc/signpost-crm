@@ -66,9 +66,10 @@ exports.newSession = async (req, res, next) => {
 
         )
     catNames.forEach(c => {
-        sendAnalytics("Session Category", c)
+        sendAnalytics("Session Category", c, user.country)
     });
 }
+
 
 exports.sendMessage = async (req, res, next) => {
     // Send message and remove Follow-Up Flag
@@ -212,21 +213,26 @@ async function updateStatus(id, status) {
     )
 }
 
-const sendAnalytics = (category, action) => {
+const sendAnalytics = (category, action, country = "el-salvador") => {
     const ua = require('universal-analytics');
-    let visitor = ua(process.env.GA_KEY, 1, { strictCidFormat: false });
-
-    var params = {
-        ec: category,
-        ea: action,
+    let ga_key;
+    if (country == "el-salvador") {
+        ga_key = process.env.GA_KEY
     }
-
-    console.log(params);
-    visitor.event(params, function (err) {
-        if (err) {
-            console.log(err);
-
+    if (country == "italy") {
+        ga_key = process.env.GA_KEY_ITALY
+    }
+    if (ga_key) {
+        let visitor = ua(ga_key, 1, { strictCidFormat: false });
+        var params = {
+            ec: category,
+            ea: action + " - CRM",
         }
-
-    });
+        console.log("params" + params);
+        visitor.event(params, function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
 }

@@ -222,17 +222,19 @@ const sendAnalytics = (category, action, country = "el-salvador") => {
     if (country == "italy") {
         ga_key = process.env.GA_KEY_ITALY
     }
+    console.log("sendAnalytics -> ", ga_key);
     if (ga_key) {
         let visitor = ua(ga_key, 1, { strictCidFormat: false });
         var params = {
             ec: category,
             ea: action + " - CRM",
         }
-        console.log("params" + params);
+        console.log("params", params);
         visitor.event(params, function (err) {
             if (err) {
                 console.log(err);
             }
+            console.log("sendAnalytics -> event success");
         });
     }
 }

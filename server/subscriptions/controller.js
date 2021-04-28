@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const contentful = require('contentful');
 const request = require('request');
 const roles = require('../config/roles');
-const Subscription  = require('./model');
-const Notification  = require('../notifications/model');
+const Subscription = require('./model');
+const Notification = require('../notifications/model');
 require('dotenv').config();
 
 exports.ping = (req, res, next) => {
@@ -11,7 +11,7 @@ exports.ping = (req, res, next) => {
 }
 
 exports.list = async (req, res, next) => {
-    let list = await Subscription.findAll({order: [['createdAt', 'DESC']]})
+    let list = await Subscription.findAll({ order: [['createdAt', 'DESC']] })
     res.send(list);
 }
 /*
@@ -26,24 +26,25 @@ exports.addSubscription = async (req, res, next) => {
     let validPhone = validatePhone(phone);
     //Verify there's no previous subscription
     let existing;
-    try{
+    try {
         existing = await Subscription.findAll({
-            limit :1,
-            where: { phone: validPhone, categorySlug: categorySlug},
-            order: [ [ 'id', 'DESC' ]]})
-    }catch(err){
+            limit: 1,
+            where: { phone: validPhone, categorySlug: categorySlug },
+            order: [['id', 'DESC']]
+        })
+    } catch (err) {
         res.status(500).send(err);
     }
-    
+
     existingSubscription = existing.length > 0 ? existing[0] : [];
     console.error("EXISTING:", existing)
-    if (existingSubscription && existingSubscription.active){
+    if (existingSubscription && existingSubscription.active) {
         res.status(400).send("Already Exists and active subcription for this Phone number and Category");
-    }else{
+    } else {
         let category = await getCategoryBySlug(categorySlug);
         let code = Math.floor(1000 + Math.random() * 9000);  //4 digit Verification code
 
-        if (existing.length === 0){
+        if (existing.length === 0) {
             let subscription = Subscription.build({
                 phone: validPhone,
                 category: category.name,
@@ -53,24 +54,24 @@ exports.addSubscription = async (req, res, next) => {
                 active: false,
             })
             await subscription.save();
-        }else{
+        } else {
             await Subscription.update(
-                { 
-                code: code,
+                {
+                    code: code,
                 },
-                { where: {id: existingSubscription.id}}
+                { where: { id: existingSubscription.id } }
             )
         }
-        try{
+        try {
             sendCode(validPhone, code, category.name);
-            res.status(200).send({code: code, message: "OK"});
-        }catch(err){
+            res.status(200).send({ code: code, message: "OK" });
+        } catch (err) {
             res.status(500).send(err);
         }
     }
-    
-    
-    
+
+
+
 };
 
 /*
@@ -82,45 +83,45 @@ exports.verifyCode = async (req, res, next) => {
     const { phone, code } = req.body;
     let validPhone = validatePhone(phone);
     let existingSubscription;
-    try{
+    try {
 
-        existingSubscription = await  Subscription.count({
+        existingSubscription = await Subscription.count({
             where: { phone: validPhone, code: code }
         })
-    }catch(err){
+    } catch (err) {
         res.status(500).send(err);
-        return 
+        return
     }
-    if (existingSubscription > 0){
-        try{
+    if (existingSubscription > 0) {
+        try {
             Subscription.update(
                 {
                     active: true
                 },
-                { where: {phone: validPhone, code :code}}
+                { where: { phone: validPhone, code: code } }
             )
             res.status(200);
             res.send("OK");
-        }catch(err){
+        } catch (err) {
             res.status(500).send(err);
         }
-    }else{
+    } else {
         res.status(400);
         res.send("Invalid phone or code");
     }
 }
 
-exports.triggerNotifications = async (req, res, next) =>{
+exports.triggerNotifications = async (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     const { sys } = req.body;
-    const{ id } = sys;
+    const { id } = sys;
     let article = await getArticleCategorybyId(id);
     let category = await getCategoryById(article.categoryId);
-    
+
     let subscriptions = await Subscription.findAll({
         where: { categoryId: category.id, active: true }
     });
-    subscriptions.forEach( s => {
+    subscriptions.forEach(s => {
         sendNotification(s.phone, category.name);
         saveNotification(s.phone, id, category);
     })
@@ -128,117 +129,117 @@ exports.triggerNotifications = async (req, res, next) =>{
     res.status(200).send(`${subscriptions.length} notifications sent`);
 }
 
-exports.lookUpNotifications = async(req, res, next) => {
+exports.lookUpNotifications = async (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     let { phone, message } = req.body;
-    if (message && message.trim().toLowerCase() == "info"){
+    if (message && message.trim().toLowerCase() == "info") {
         phone = phone.replace("whatsapp:+", "");
         console.error(phone);
         let result = await Notification.findAll({
-
-                where: { phone: phone, status: "sent"},
-                order: [ [ 'id', 'DESC' ]]})
-        if (result.length > 0){
+            where: { phone: phone, status: "sent" },
+            order: [['id', 'DESC']]
+        })
+        if (result.length > 0) {
             let articleId = result[0].articleId;
             let article = await getArticleById(articleId);
-            let text = `*${article.title}*\n"${article.content.substr(0,200)}..."\nLink: https://www.cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
-            try{
+            let text = `*${article.title}*\n"${article.content.substr(0, 200)}..."\nLink: https://www.cuentanos.org/${article.country}/${result[0].categorySlug}/${article.slug}`;
+            try {
                 Notification.update({
                     status: "done",
-                    },
-                    {where: { id: result[0].id }}
+                },
+                    { where: { id: result[0].id } }
                 )
-            }catch(err){
+            } catch (err) {
                 res.status(500).send("Error getting article");
             }
             res.status(200).send(text);
-        }else{
+        } else {
             res.status(404).send("No notifications found for this number");
         }
-    }else{
-        res.status(404).send("No 'info' message:"+message);
+    } else {
+        res.status(404).send("No 'info' message:" + message);
     }
 }
 
-exports.subscriptionList = async (req, res, next) =>{
+exports.subscriptionList = async (req, res, next) => {
     let list = await Subscription.findAll();
     res.send(list);
-    
+
 }
 
-exports.stopSubscription = async(req, res, next) => {
+exports.stopSubscription = async (req, res, next) => {
     const { phone } = req.body;
     let validPhone = validatePhone(phone);
-    if (validPhone.indexOf("whatsapp") > -1 ){
+    if (validPhone.indexOf("whatsapp") > -1) {
         validPhone = validPhone.split(":")[1];
     }
     let existing;
-    try{
+    try {
         existing = await Subscription.findAll({
             where: { phone: validPhone, active: true }
         })
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.status(500).send(err);
         return
     }
-    if (existing && existing.length > 0){
+    if (existing && existing.length > 0) {
         Subscription.update(
-            { 
-            active: false,
+            {
+                active: false,
             },
-            { where: {phone: validPhone}}
+            { where: { phone: validPhone } }
         )
         res.status(200).send("Canceled");
-    }else{
+    } else {
         res.status(404).send("Not found");
     }
     return
 
 }
 
-const getArticleById = async (id) =>{
-    const client =  contentful.createClient({
+const getArticleById = async (id) => {
+    const client = contentful.createClient({
         space: "e17qk44d7f2w",
-        accessToken: process.env.CONTENTFUL_KEY 
+        accessToken: process.env.CONTENTFUL_KEY
     })
     let entry = await client.getEntry(id);
-    return {title: entry.fields.title, lead: entry.fields.lead, content: entry.fields.content, country: entry.fields.country.fields.slug, slug: entry.fields.slug};
+    return { title: entry.fields.title, lead: entry.fields.lead, content: entry.fields.content, country: entry.fields.country.fields.slug, slug: entry.fields.slug };
 }
 
 const getCategoryById = async (id) => {
-    const client =  contentful.createClient({
+    const client = contentful.createClient({
         space: "e17qk44d7f2w",
-        accessToken: process.env.CONTENTFUL_KEY 
+        accessToken: process.env.CONTENTFUL_KEY
     })
     let entry = await client.getEntry(id);
-    let result = {name: entry.fields.name, slug: entry.fields.slug, id: id}
+    let result = { name: entry.fields.name, slug: entry.fields.slug, id: id }
     return result
-    
+
 }
 
 const getCategoryBySlug = async (slug) => {
-    const client =  contentful.createClient({
+    const client = contentful.createClient({
         space: "e17qk44d7f2w",
-        accessToken: process.env.CONTENTFUL_KEY 
+        accessToken: process.env.CONTENTFUL_KEY
     })
     let entries = await client.getEntries({
-                    content_type: "category",
-                    "fields.slug": slug
-                });
+        content_type: "category",
+        "fields.slug": slug
+    });
     let result = entries.items[0].fields;
-    let category = {id: entries.items[0].sys.id, name: result.name, slug: slug}
+    let category = { id: entries.items[0].sys.id, name: result.name, slug: slug }
 
     return category
 }
 
 const getArticleCategorybyId = async (articleId) => {
-    const client =  contentful.createClient({
+    const client = contentful.createClient({
         space: "e17qk44d7f2w",
-        accessToken: process.env.CONTENTFUL_KEY 
+        accessToken: process.env.CONTENTFUL_KEY
     })
     let entry = await client.getEntry(articleId);
-    let result = {slug: entry.fields.slug, categoryId: entry.fields.category.sys.id}
+    let result = { slug: entry.fields.slug, categoryId: entry.fields.category.sys.id }
     return result
 }
 
@@ -282,5 +283,5 @@ const sendNotification = (phone, category) => {
 }
 
 const validatePhone = (phone) => {
-    return phone && phone.replace("+", "").replace("(" ,"").replace(")", "").replace(" ", "").replace("-", "");
+    return phone && phone.replace("+", "").replace("(", "").replace(")", "").replace(" ", "").replace("-", "");
 }

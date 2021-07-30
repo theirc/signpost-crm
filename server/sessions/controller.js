@@ -236,5 +236,5 @@ const sendAnalytics = (category, action, country = "el-salvador") => {
             }
             console.log("sendAnalytics -> event success");
         });
-    }
+    } 
 }

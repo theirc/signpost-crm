@@ -6,6 +6,8 @@ const request = require('request');
 const roles = require('../config/roles');
 const Session = require('./model');
 const Category = require('../categories/model');
+const ua = require('universal-analytics');
+
 require('dotenv').config();
 
 //Session.belongsTo(Category);
@@ -66,7 +68,7 @@ exports.newSession = async (req, res, next) => {
 
         )
     catNames.forEach(c => {
-        sendAnalytics("Session Category", c, user.country)
+        sendAnalytics("New chat", c, user.country)
     });
 }
 
@@ -214,7 +216,6 @@ async function updateStatus(id, status) {
 }
 
 const sendAnalytics = (category, action, country = "el-salvador") => {
-    const ua = require('universal-analytics');
     let ga_key;
     if (country == "el-salvador") {
         ga_key = process.env.GA_KEY
@@ -224,7 +225,7 @@ const sendAnalytics = (category, action, country = "el-salvador") => {
     }
     console.log("sendAnalytics -> ", ga_key);
     if (ga_key) {
-        let visitor = ua(ga_key, 1, { strictCidFormat: false });
+        let visitor = ua(ga_key)//, 1, { strictCidFormat: false });
         var params = {
             ec: category,
             ea: action + " - CRM",
@@ -236,5 +237,5 @@ const sendAnalytics = (category, action, country = "el-salvador") => {
             }
             console.log("sendAnalytics -> event success");
         });
-    } 
+    }
 }

@@ -231,11 +231,11 @@ const sendAnalytics = (category, action, country = "el-salvador") => {
             ea: action + " - CRM",
         }
         console.log("params", params);
-        visitor.event(params, function (err) {
+        visitor.event(params, function (err, res) {
             if (err) {
                 console.log(err);
             }
-            console.log("sendAnalytics -> event success");
+            console.log("sendAnalytics -> event success", res);
         });
     }
 }

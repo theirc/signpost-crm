@@ -227,7 +227,7 @@ const sendAnalytics = (category, action, country = "el-salvador") => {
     if (ga_key) {
         let visitor = ua(ga_key)//, 1, { strictCidFormat: false });
         var params = {
-            ec: category,
+            ec: category + " - CRM",
             ea: action + " - CRM",
         }
         console.log("params", params);
